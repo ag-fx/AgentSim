@@ -1,16 +1,23 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.31'
 
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.11.1"
+
     }
 }
 
 apply plugin: "kotlin"
+apply plugin: "org.jmailen.kotlinter"
 
 kotlin {
     experimental {
@@ -18,8 +25,10 @@ kotlin {
     }
 }
 
+
+
 apply plugin: 'application'
-mainClassName = 'com.myApp.app.MyApp'
+mainClassName = 'application.app.MyApp'
 
 allprojects {
     task initSourceFolders {
@@ -51,7 +60,7 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.myApp.app.MyApp'
+                'Main-Class': 'com.myApp.application.MyApp'
         )
     }
     from(configurations.compile.collect { entry -> zipTree(entry) }) {

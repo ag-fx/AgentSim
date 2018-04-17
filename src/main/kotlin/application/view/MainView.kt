@@ -1,7 +1,7 @@
-package com.myApp.view
+package application.view
 
-import com.myApp.controller.MyController
-import tornadofx.*
+import application.controller.MyController
+import tornadofx.* // ktlint-disable
 
 class MainView : View("Hello TornadoFX") {
 

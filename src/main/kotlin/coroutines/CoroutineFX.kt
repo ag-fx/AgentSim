@@ -17,6 +17,7 @@
 package coroutines
 
 import com.sun.javafx.application.PlatformImpl
+import coroutines.JavaFx.delay
 import javafx.animation.AnimationTimer
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
@@ -24,7 +25,7 @@ import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.util.Duration
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.*// ktlint-disable
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.experimental.CoroutineContext
@@ -34,7 +35,7 @@ import kotlin.coroutines.experimental.CoroutineContext
  */
 object JavaFx : CoroutineDispatcher(), Delay {
     init {
-        // :kludge: to make sure Toolkit is initialized if we use JavaFx dispatcher outside of JavaFx app
+        // :kludge: to make sure Toolkit is initialized if we use JavaFx dispatcher outside of JavaFx application
         initPlatform()
     }
 
