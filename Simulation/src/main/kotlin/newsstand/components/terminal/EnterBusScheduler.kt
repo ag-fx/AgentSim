@@ -11,13 +11,12 @@ import newsstand.components.convert
 import newsstand.components.entity.Terminal
 import newsstand.constants.mc
 
-abstract class GetOnBusScheduler(
+abstract class EnterBusScheduler(
     mySim: Simulation,
     parent: Agent,
     private val terminal: Terminal,
     id: Int
 ) : Scheduler(id, mySim, parent) {
-
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
@@ -31,9 +30,9 @@ abstract class GetOnBusScheduler(
             .createCopy()
             .convert()
             .let {
-                val customer = terminal.queue.pop()
-                val minibus = it.minibus!!
-                minibus.queue.push(customer)
+             //   val customer = terminal.queue.pop()
+             //   val minibus = it.minibus!!
+             //   minibus.queue.push(customer)
                 assistantFinished(it)
             }
 

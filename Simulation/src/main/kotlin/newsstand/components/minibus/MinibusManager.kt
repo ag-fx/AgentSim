@@ -10,6 +10,7 @@ import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
+import newsstand.components.entity.Building
 import newsstand.components.setMinibus
 import newsstand.constants.id
 import newsstand.constants.id.MinibusMovementStartID
@@ -31,18 +32,31 @@ class MinibusManager(
                 .let { startContinualAssistant(it) }
         }
 
-        finish -> when (msg.sender()) {
-            is MinibusMovementStart -> msg
+        mc.minibusGoTo -> msg
+            .createCopy()
+            .convert()
+            .toAgentsAssistant(myAgent(), id.MinibusMovementID)
+            .let { startContinualAssistant(it) }
+
+        finish ->  msg
                 .convert()
                 .toAgent(id.BossAgent)
-                .withCode(mc.terminalOneMinibusArrival)
+                .withCode(getTerminalArrivalCode(msg))
                 .let { notice(it) }
 
-            is MinibusMovement -> TODO()
 
-            else -> throw IllegalStateException()
-        }
         else -> throw WrongMessageCode(msg)
+    }
+
+    private fun getTerminalArrivalCode(msg: MessageForm): Int {
+        val msg = msg.convert()
+        val source = msg.minibus!!.source
+        return when (source) {
+            Building.TerminalOne  -> mc.terminalOneMinibusArrival
+            Building.TerminalTwo  -> mc.terminalTwoMinibusArrival
+            Building.AirCarRental -> mc.airCarRentalMinibusArrival
+        }
+
     }
 
     override fun myAgent() = super.myAgent() as MinibusAgent

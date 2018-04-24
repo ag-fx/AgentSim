@@ -19,6 +19,9 @@ object id {
     const val TerminalManagerID = 41
     const val GetOnBusTerminalOne = 42
     const val GetOnBusTerminalTwo = 43
+    const val EnterBusActionT1 = 44
+    const val EnterBusActionT2 = 45
+
 
     const val MinibusAgentID = 50
     const val MinibusManagerID = 51

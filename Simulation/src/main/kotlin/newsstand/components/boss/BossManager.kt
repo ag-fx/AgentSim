@@ -21,11 +21,19 @@ class BossManager(
 
     override fun processMessage(message: MessageForm) = when (message.code()) {
 
-        init -> message
-            .createCopy()
-            .toAgent(id.SurroundingAgent)
-            .withCode(init)
-            .let { notice(it) }
+        init -> {
+            val toSurrounding = message
+                .createCopy()
+                .toAgent(id.SurroundingAgent)
+                .withCode(init)
+
+            val toMinibus = message
+                .createCopy()
+                .toAgent(id.MinibusAgentID)
+                .withCode(init)
+
+            listOf(toSurrounding, toMinibus).forEach { notice(it) }
+        }
 
         customerArrivalTerminalOne -> message
             .createCopy()
@@ -37,7 +45,8 @@ class BossManager(
             .toAgent(id.TerminalAgentID)
             .let { notice(it) }
 
-        terminalOneMinibusArrival -> message
+        mc.terminalOneMinibusArrival,
+        mc.terminalTwoMinibusArrival -> message
             .createCopy()
             .toAgent(id.TerminalAgentID)
             .let { notice(it) }

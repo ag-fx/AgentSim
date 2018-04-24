@@ -7,6 +7,8 @@ import OSPABA.Scheduler
 import OSPABA.Simulation
 import abaextensions.withCode
 import newsstand.components.convert
+import newsstand.components.entity.Building
+import newsstand.components.entity.nextStop
 import newsstand.constants.id
 import newsstand.constants.mc
 
@@ -21,13 +23,18 @@ class MinibusMovementStart(
             .createCopy()
             .withCode(mc.terminalOneMinibusArrival)
             .convert()
-            .let { hold(it.minibus!!.secondsToDestination(), it) }
+            .let { hold(it.minibus!!.secondsToDestination().also { println(it) }, it) }
 
         mc.terminalOneMinibusArrival -> msg
             .createCopy()
             .convert()
             .let {
-                it.minibus!!.isInDestination = true
+                it.minibus!!.apply {
+                    isInDestination = true
+                    source = Building.TerminalOne
+                    destination = source.nextStop()
+                    leftAt = mySim().currentTime()
+                }
                 assistantFinished(it)
             }
 

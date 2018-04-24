@@ -6,6 +6,7 @@ import abaextensions.addOwnMessages
 import newsstand.components.entity.Building
 import newsstand.components.entity.Minibus
 import newsstand.constants.id
+import newsstand.constants.mc
 import newsstand.constants.mc.init
 
 class MinibusAgent(
@@ -13,11 +14,17 @@ class MinibusAgent(
     parent: Agent
 ) : Agent(id.MinibusAgentID, mySim, parent) {
 
-    val minibuses = List(5) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
+    val minibuses = List(2) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
 
     init {
         MinibusManager(mySim, this)
-        addOwnMessages(init)
+        MinibusMovementStart(mySim,this)
+        MinibusMovement(mySim,this)
+        addOwnMessages(
+            init,
+            mc.minibusGoTo,
+            mc.terminalOneMinibusArrival
+        )
     }
 
 }

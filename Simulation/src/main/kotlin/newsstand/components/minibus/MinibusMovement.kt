@@ -1,11 +1,16 @@
 package newsstand.components.minibus
 
-import OSPABA.*
+import OSPABA.Agent
+import OSPABA.IdList.start
+import OSPABA.MessageForm
+import OSPABA.Scheduler
+import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.nextStop
 import newsstand.components.entity.secondsToNext
 import newsstand.constants.id
 import newsstand.constants.mc
@@ -17,29 +22,30 @@ class MinibusMovement(
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
-        IdList.start -> msg
-            .withCode(mc.minibusGoTo)
+        start -> msg
+            .withCode(mc.minibusArrivedToDestination)
             .convert()
-            .let { hold(it.minibus!!.source.secondsToNext(it.minibus!!.averageSpeed), it) }
+            .let {
+                it.minibus!!.apply {
+                    isInDestination = false
+                    leftAt = mySim().currentTime()
+                }
 
-        mc.minibusGoTo -> {
-            val msg = msg.convert()
-            val minibus = msg.minibus!!
-            when (minibus.destination) {
-                Building.TerminalOne -> TODO()
-                Building.TerminalTwo -> TODO()
-                Building.AirCarRental -> TODO()
+                hold(it.minibus!!.source.secondsToNext(it.minibus!!.averageSpeed), it)
             }
-//            val cpy = msg.createCopy()
-//            hold(rnd.sample(), cpy)
-//
-//
-//            msg.convert().setNewCustomer(Building.TerminalOne)
-//            assistantFinished(msg)
+
+        mc.minibusArrivedToDestination -> {
+            val msg = msg.convert().createCopy()
+            msg.minibus!!.apply {
+                isInDestination = true
+                source = destination
+                destination = destination.nextStop()
+                leftAt = mySim().currentTime()
+            }
+            assistantFinished(msg)
         }
 
         else -> throw WrongMessageCode(msg)
     }
 
-    private val rnd = ExponentialRNG(3600.0 / 43.0)
 }

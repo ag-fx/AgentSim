@@ -18,6 +18,7 @@ class Message : MessageForm {
 
     constructor(original: Message) : super(original) {
         customer = original.customer
+        minibus = original.minibus
     }
 
     fun setNewCustomer(building: Building) {
