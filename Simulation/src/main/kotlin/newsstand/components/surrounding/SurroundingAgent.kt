@@ -1,6 +1,7 @@
 package newsstand.components.surrounding
 
 import OSPABA.Agent
+import OSPABA.ContinualAssistant
 import OSPABA.Simulation
 import OSPStat.Stat
 import abaextensions.addOwnMessages
@@ -16,7 +17,9 @@ class SurroundingAgent(
 
     init {
         SurroundingManager(mySim, this)
-        CustomerArrivalScheduler(mySim, this)
-        addOwnMessages(mc.init, mc.customerLeftSystem, mc.newCustomer)
+        TerminalOneCustomerArrivalScheduler(mySim, this)
+        TerminalTwoCustomerArrivalScheduler(mySim, this)
+        addOwnMessages(mc.init, mc.newCustomer)
     }
+
 }

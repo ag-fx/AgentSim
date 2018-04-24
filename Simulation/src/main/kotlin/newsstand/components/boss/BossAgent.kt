@@ -8,20 +8,26 @@ import abaextensions.toAgent
 import abaextensions.withCode
 import newsstand.components.Message
 import newsstand.constants.id
-import newsstand.constants.mc.customerArrivedToSystem
-import newsstand.constants.mc.customerServiceEnded
+import newsstand.constants.mc
+import newsstand.constants.mc.customerArrivalTerminalOne
+import newsstand.constants.mc.customerArrivalTerminalTwo
 import newsstand.constants.mc.init
 
 class BossAgent(
-    mySim: Simulation
+    val mySim: Simulation
 ) : Agent(id.BossAgent, mySim, null) {
 
     init {
         BossManager(mySim, this)
-        addOwnMessages(init, customerArrivedToSystem, customerServiceEnded)
+        addOwnMessages(
+            init,
+            customerArrivalTerminalOne,
+            customerArrivalTerminalTwo,
+            mc.terminalOneMinibusArrival
+        )
     }
 
-    fun start() = Message(null, mySim())
+    fun start() = Message(null, mySim)
         .toAgent(this)
         .withCode(init)
         .let { noticeManager(it) }

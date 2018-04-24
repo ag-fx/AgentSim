@@ -1,3 +1,3 @@
 package newsstand.components.entity
 
-data class Customer(val arrivedToSystem: Double)
+data class Customer(val arrivedToSystem: Double,val building: Building)

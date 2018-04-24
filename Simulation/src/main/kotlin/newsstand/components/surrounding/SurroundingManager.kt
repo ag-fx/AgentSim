@@ -9,10 +9,8 @@ import abaextensions.WrongMessageCode
 import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
-import newsstand.components.Message
-import newsstand.constants.* // ktlint-disable
-import newsstand.constants.mc.customerArrivedToSystem
-import newsstand.constants.mc.customerLeftSystem
+import newsstand.constants.id
+import newsstand.constants.mc
 import newsstand.constants.mc.init
 
 class SurroundingManager(
@@ -22,22 +20,30 @@ class SurroundingManager(
 
     override fun processMessage(message: MessageForm) = when (message.code()) {
 
-        init -> message
-            .toAgentsAssistant(myAgent(), id.CustomerArrivalScheduler)
-            .let { startContinualAssistant(it) }
+        init -> myAgent()
+            .continualAssistants()
+            .forEach {
+                message
+                    .createCopy()
+                    .toAgentsAssistant(myAgent(), it.id())
+                    .let { startContinualAssistant(it) }
+            }
 
-        finish -> message
-            .toAgent(id.BossAgent)
-            .withCode(customerArrivedToSystem)
-            .let { notice(it) }
-
-        customerLeftSystem -> {
-            val msg = message as Message
-      //      myAgent().timeInSystem.addSample(mySim().currentTime() - msg.customer!!.arrivedToSystem)
+        finish -> when (message.sender()) {
+            is TerminalOneCustomerArrivalScheduler -> message.notifyBossTerminalArrival(mc.customerArrivalTerminalOne)
+            is TerminalTwoCustomerArrivalScheduler -> message.notifyBossTerminalArrival(mc.customerArrivalTerminalTwo)
+            else -> throw IllegalStateException("Wrong finish sender")
         }
 
         else -> throw WrongMessageCode(message)
     }
 
-    override fun myAgent(): SurroundingAgent = super.myAgent() as SurroundingAgent
+    override fun myAgent() = super.myAgent() as SurroundingAgent
+
+    private fun MessageForm.notifyBossTerminalArrival(id: Int) = this
+        .createCopy()
+        .toAgent(newsstand.constants.id.BossAgent)
+        .withCode(id)
+        .let { notice(it) }
+
 }

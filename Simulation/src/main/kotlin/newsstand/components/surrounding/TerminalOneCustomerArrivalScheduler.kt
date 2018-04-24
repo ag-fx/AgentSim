@@ -8,15 +8,15 @@ import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
-import newsstand.components.Message
-import newsstand.components.entity.Customer
+import newsstand.components.convert
+import newsstand.components.entity.Building
 import newsstand.constants.id
 import newsstand.constants.mc.newCustomer
 
-class CustomerArrivalScheduler(
+class TerminalOneCustomerArrivalScheduler(
     mySim: Simulation,
     parent: Agent
-) : Scheduler(id.CustomerArrivalScheduler, mySim, parent) {
+) : Scheduler(id.TerminalOneCustomerArrivalScheduler, mySim, parent) {
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
@@ -24,18 +24,15 @@ class CustomerArrivalScheduler(
             .withCode(newCustomer)
             .let { hold(rnd.sample(), it) }
 
-        newCustomer -> msg
-            .createCopy()
-            .let {
-                hold(rnd.sample(), it)
-                (msg as Message).setNewCustomer()
-                assistantFinished(msg)
-            }
+        newCustomer -> {
+            val cpy = msg.createCopy()
+            hold(rnd.sample(), cpy)
+            msg.convert().setNewCustomer(Building.TerminalOne)
+            assistantFinished(msg)
+        }
 
         else -> throw WrongMessageCode(msg)
     }
 
-    companion object {
-        val rnd = ExponentialRNG(60.0 / 10.0)
-    }
+    private val rnd = ExponentialRNG(3600.0 / 43.0)
 }

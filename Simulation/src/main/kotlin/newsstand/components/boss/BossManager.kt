@@ -9,10 +9,10 @@ import abaextensions.toAgent
 import abaextensions.withCode
 import newsstand.constants.id
 import newsstand.constants.mc
-import newsstand.constants.mc.customerArrivedToSystem
-import newsstand.constants.mc.customerServiceEnded
+import newsstand.constants.mc.customerArrivalTerminalOne
+import newsstand.constants.mc.customerArrivalTerminalTwo
 import newsstand.constants.mc.init
-import newsstand.constants.mc.startCustomerService
+import newsstand.constants.mc.terminalOneMinibusArrival
 
 class BossManager(
     mySim: Simulation,
@@ -22,18 +22,24 @@ class BossManager(
     override fun processMessage(message: MessageForm) = when (message.code()) {
 
         init -> message
+            .createCopy()
             .toAgent(id.SurroundingAgent)
             .withCode(init)
             .let { notice(it) }
 
-        customerArrivedToSystem -> message
-            .toAgent(id.NewsstandAgent)
-            .withCode(startCustomerService)
-            .let { request(it) }
+        customerArrivalTerminalOne -> message
+            .createCopy()
+            .toAgent(id.TerminalAgentID)
+            .let { notice(it) }
 
-        customerServiceEnded -> message
-            .toAgent(id.SurroundingAgent)
-            .withCode(mc.customerLeftSystem)
+        customerArrivalTerminalTwo -> message
+            .createCopy()
+            .toAgent(id.TerminalAgentID)
+            .let { notice(it) }
+
+        terminalOneMinibusArrival -> message
+            .createCopy()
+            .toAgent(id.TerminalAgentID)
             .let { notice(it) }
 
         else -> throw WrongMessageCode(message)
