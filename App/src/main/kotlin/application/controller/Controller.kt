@@ -1,35 +1,39 @@
 package application.controller
 
+import application.model.CustomerModel
+import application.model.EmployeeModel
 import application.model.MinibusModel
-import javafx.beans.property.SimpleDoubleProperty
+import application.model.TerminalModel
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
+import javafx.collections.FXCollections.observableArrayList
 import javafx.concurrent.Task
 import newsstand.NewsstandSimualation
 import tornadofx.*
 
+
 class MyController : Controller() {
 
-    val textProperty = SimpleStringProperty("1")
-    private var text by textProperty
-
-    val minibuses = FXCollections.observableArrayList<MinibusModel>()
-
-    val s = NewsstandSimualation()
+     val minibuses = observableArrayList<MinibusModel>()
+     val terminals = observableArrayList<TerminalModel>()
+     val employees = observableArrayList<EmployeeModel>()
+     val carRentalQueue = observableArrayList<CustomerModel>()
+     val sim = NewsstandSimualation()
 
     val simTime = SimpleStringProperty("Init")
     lateinit var asyncThing: Task<Unit>
-    fun run() {
-        println("x")
-        s.setSimSpeed(20.0, 1.0)
 
-        s.onRefreshUI {
-            s.state().minibuses.map { MinibusModel(s.currentTime(), it) }.let(minibuses::setAll)
-            simTime.set(s.currentTime().toString())
+    fun run() {
+        sim.setSimSpeed(75.0, 1.0)
+
+        sim.onRefreshUI {
+            sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
+            sim.getState().terminals.map(::TerminalModel).let(terminals::setAll)
+            sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
+            sim.getState().acrQueue.map(::CustomerModel).let(carRentalQueue::setAll)
+            simTime.set(sim.currentTime().toString())
         }
 
-        s.state().minibuses.let { println(it) }
-
-        asyncThing = runAsync { s.start() }
+        sim.onSimulationWillStart { println("idem") }
+        asyncThing = runAsync { sim.start() }
     }
 }

@@ -19,7 +19,10 @@ class SurroundingAgent(
         SurroundingManager(mySim, this)
         TerminalOneCustomerArrivalScheduler(mySim, this)
         TerminalTwoCustomerArrivalScheduler(mySim, this)
-        addOwnMessages(mc.init, mc.newCustomer)
+        addOwnMessages(
+            mc.init,
+            mc.newCustomer
+        )
     }
 
 }

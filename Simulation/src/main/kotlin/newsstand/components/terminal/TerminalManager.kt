@@ -38,18 +38,18 @@ class TerminalManager(
             else -> throw IllegalStateException()
         }
 
-        else -> throw WrongMessageCode(message)
+        else -> {}
     }
 
     private fun terminalArrival(terminal: Terminal, msg: MessageForm) {
-        val msg = msg.createCopy()
-        val minibus = msg.convert().minibus!!
+        val cpy = msg.createCopy()
+        val minibus = cpy.convert().minibus!!
         if (terminal.queue.isNotEmpty() && minibus.isNotFull()){
-            msg.toAgentsAssistant(myAgent(),terminal.enterActionID()).let { execute(it) }
-            startLoading(terminal, msg)
+            cpy.toAgentsAssistant(myAgent(),terminal.enterActionID()).let { execute(it) }
+            startLoading(terminal, cpy.createCopy())
         }
         else
-            goToNextStop(terminal, msg)
+            goToNextStop(terminal, cpy.createCopy())
     }
 
     private fun Terminal.enterActionID() = when(this.building){
@@ -64,14 +64,14 @@ class TerminalManager(
 
     private fun getOnBusAssistantID(terminal: Terminal) = when (terminal.building) {
         Building.TerminalOne  -> id.GetOnBusTerminalOne
-        Building.TerminalTwo  -> TODO()
-        Building.AirCarRental -> TODO()
+        Building.TerminalTwo  -> id.GetOnBusTerminalTwo
+        Building.AirCarRental -> throw IllegalStateException()
     }
 
     private fun goToNextStop(terminal: Terminal, msg: MessageForm) = msg
         .createCopy()
-        .withCode(mc.minibusGoTo)
         .toAgent(id.MinibusAgentID)
+        .withCode(mc.minibusGoTo)
         .convert()
         .let {
             it.minibus!!.source      = terminal.building

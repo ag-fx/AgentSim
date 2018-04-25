@@ -28,6 +28,7 @@ class TerminalAgent(
             mc.customerArrivalTerminalOne,
             mc.customerArrivalTerminalTwo,
             mc.terminalOneMinibusArrival,
+            mc.terminalTwoMinibusArrival,
             mc.customerEnteredBus
         )
     }

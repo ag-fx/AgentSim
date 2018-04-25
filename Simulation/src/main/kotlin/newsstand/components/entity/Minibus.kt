@@ -14,6 +14,7 @@ data class Minibus(
 ) {
     fun secondsToDestination() = source.secondsToNext(averageSpeed)
     fun isNotFull() = queue.size <=capacity
+    fun isNotEmpty() = queue.isNotEmpty()
 
     fun distanceFromSource(currentSimTime: Double): Double {
         return if (!isInDestination)

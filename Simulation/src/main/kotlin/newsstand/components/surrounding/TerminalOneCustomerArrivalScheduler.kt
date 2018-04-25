@@ -21,6 +21,7 @@ class TerminalOneCustomerArrivalScheduler(
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         start -> msg
+            .createCopy()
             .withCode(newCustomer)
             .let { hold(rnd.sample(), it) }
 

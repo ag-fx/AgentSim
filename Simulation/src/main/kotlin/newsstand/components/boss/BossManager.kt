@@ -12,7 +12,6 @@ import newsstand.constants.mc
 import newsstand.constants.mc.customerArrivalTerminalOne
 import newsstand.constants.mc.customerArrivalTerminalTwo
 import newsstand.constants.mc.init
-import newsstand.constants.mc.terminalOneMinibusArrival
 
 class BossManager(
     mySim: Simulation,
@@ -49,6 +48,11 @@ class BossManager(
         mc.terminalTwoMinibusArrival -> message
             .createCopy()
             .toAgent(id.TerminalAgentID)
+            .let { notice(it) }
+
+        mc.airCarRentalMinibusArrival -> message
+            .createCopy()
+            .toAgent(id.AirCarRentalAgentID)
             .let { notice(it) }
 
         else -> throw WrongMessageCode(message)

@@ -26,5 +26,10 @@ object id {
     const val MinibusAgentID = 50
     const val MinibusManagerID = 51
     const val MinibusMovementID = 52
-    const val MinibusMovementStartID = 52
+    const val MinibusMovementStartID = 53
+
+    const val AirCarRentalAgentID = 60
+    const val AirCarRentalManagerID = 61
+    const val GetOffBusAtCarRentalID = 62
+    const val CustomerServiceSchedulerID = 63
 }

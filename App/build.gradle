@@ -5,14 +5,12 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile 'no.tornado:tornadofx:1.7.15'
     compile project(':Simulation')
-
 }
 
 jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-//                'Main-Class': 'com.myApp.app.MyApp'
                 'Main-Class': 'application.app.MyApp'
         )
     }

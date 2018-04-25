@@ -23,6 +23,7 @@ class MinibusMovement(
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         start -> msg
+            .createCopy()
             .withCode(mc.minibusArrivedToDestination)
             .convert()
             .let {
@@ -31,7 +32,7 @@ class MinibusMovement(
                     leftAt = mySim().currentTime()
                 }
 
-                hold(it.minibus!!.source.secondsToNext(it.minibus!!.averageSpeed), it)
+                hold(it.minibus!!.secondsToDestination(), it)
             }
 
         mc.minibusArrivedToDestination -> {
@@ -40,7 +41,6 @@ class MinibusMovement(
                 isInDestination = true
                 source = destination
                 destination = destination.nextStop()
-                leftAt = mySim().currentTime()
             }
             assistantFinished(msg)
         }

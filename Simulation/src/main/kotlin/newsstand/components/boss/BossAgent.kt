@@ -23,7 +23,9 @@ class BossAgent(
             init,
             customerArrivalTerminalOne,
             customerArrivalTerminalTwo,
-            mc.terminalOneMinibusArrival
+            mc.terminalOneMinibusArrival,
+            mc.terminalTwoMinibusArrival,
+            mc.airCarRentalMinibusArrival
         )
     }
 

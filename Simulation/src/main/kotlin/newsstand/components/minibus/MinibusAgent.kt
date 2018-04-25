@@ -18,16 +18,14 @@ class MinibusAgent(
 
     init {
         MinibusManager(mySim, this)
-        MinibusMovementStart(mySim,this)
-        MinibusMovement(mySim,this)
+        MinibusMovementStart(mySim, this)
+        MinibusMovement(mySim, this)
         addOwnMessages(
             init,
             mc.minibusGoTo,
+            mc.minibusArrivedToDestination,
             mc.terminalOneMinibusArrival
         )
     }
 
 }
-
-
-

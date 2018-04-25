@@ -1,6 +1,5 @@
 package application.model
 
-import newsstand.components.entity.Customer
 import newsstand.components.entity.Minibus
 import tornadofx.*
 
@@ -16,8 +15,3 @@ class MinibusModel(val simTime:Double,minibus: Minibus) : tornadofx.ItemViewMode
     val queue = minibus.queue.toList().observable()
 }
 
-class CustomerModel(customer: Customer) : ItemViewModel<Customer>(customer) {
-    val arrivedToSystem = bind(Customer::arrivedToSystem)
-    val building = bind(Customer::building)
-    val id = bind(Customer::id)
-}

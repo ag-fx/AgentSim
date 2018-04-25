@@ -38,11 +38,12 @@ class MinibusManager(
             .toAgentsAssistant(myAgent(), id.MinibusMovementID)
             .let { startContinualAssistant(it) }
 
-        finish ->  msg
-                .convert()
-                .toAgent(id.BossAgent)
-                .withCode(getTerminalArrivalCode(msg))
-                .let { notice(it) }
+        finish -> msg
+            .createCopy()
+            .convert()
+            .toAgent(id.BossAgent)
+            .withCode(getTerminalArrivalCode(msg))
+            .let { notice(it) }
 
 
         else -> throw WrongMessageCode(msg)

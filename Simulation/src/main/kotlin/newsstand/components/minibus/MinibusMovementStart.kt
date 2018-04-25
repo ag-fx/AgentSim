@@ -21,11 +21,11 @@ class MinibusMovementStart(
 
         start -> msg
             .createCopy()
-            .withCode(mc.terminalOneMinibusArrival)
+            .withCode(mc.minibusArrivedToDestination)
             .convert()
             .let { hold(it.minibus!!.secondsToDestination().also { println(it) }, it) }
 
-        mc.terminalOneMinibusArrival -> msg
+        mc.minibusArrivedToDestination -> msg
             .createCopy()
             .convert()
             .let {
@@ -33,7 +33,6 @@ class MinibusMovementStart(
                     isInDestination = true
                     source = Building.TerminalOne
                     destination = source.nextStop()
-                    leftAt = mySim().currentTime()
                 }
                 assistantFinished(it)
             }

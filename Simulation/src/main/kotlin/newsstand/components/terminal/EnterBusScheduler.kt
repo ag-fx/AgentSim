@@ -28,17 +28,10 @@ abstract class EnterBusScheduler(
 
         mc.customerEnteredBus -> msg
             .createCopy()
-            .convert()
-            .let {
-             //   val customer = terminal.queue.pop()
-             //   val minibus = it.minibus!!
-             //   minibus.queue.push(customer)
-                assistantFinished(it)
-            }
+            .let { assistantFinished(it) }
 
         else -> throw IllegalStateException()
     }
-
 
     override fun myAgent() = super.myAgent() as TerminalAgent
 
