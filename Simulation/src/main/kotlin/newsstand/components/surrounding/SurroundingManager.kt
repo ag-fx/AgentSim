@@ -9,6 +9,7 @@ import abaextensions.WrongMessageCode
 import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
+import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
@@ -30,20 +31,27 @@ class SurroundingManager(
             }
 
         finish -> when (message.sender()) {
-            is TerminalOneCustomerArrivalScheduler -> message.notifyBossTerminalArrival(mc.customerArrivalTerminalOne)
-            is TerminalTwoCustomerArrivalScheduler -> message.notifyBossTerminalArrival(mc.customerArrivalTerminalTwo)
+            is TerminalOneCustomerArrivalScheduler -> message.notifyTerminalArrival(mc.customerArrivalTerminalOne)
+            is TerminalTwoCustomerArrivalScheduler -> message.notifyTerminalArrival(mc.customerArrivalTerminalTwo)
             else -> throw IllegalStateException("Wrong finish sender")
         }
+
+        mc.customerLeaving -> customerLeaving(message)
 
         else -> throw WrongMessageCode(message)
     }
 
-    override fun myAgent() = super.myAgent() as SurroundingAgent
-
-    private fun MessageForm.notifyBossTerminalArrival(id: Int) = this
+    private fun MessageForm.notifyTerminalArrival(id: Int) = this
         .createCopy()
-        .toAgent(newsstand.constants.id.BossAgent)
+        .toAgent(newsstand.constants.id.TerminalAgentID)
         .withCode(id)
         .let { notice(it) }
+
+    private fun customerLeaving(msg: MessageForm) = msg.convert().let {
+        val customer = it.customer!!
+        myAgent().timeInSystem.addSample(mySim().currentTime() - customer.arrivedToSystem)
+    }
+
+    override fun myAgent() = super.myAgent() as SurroundingAgent
 
 }

@@ -15,3 +15,4 @@ class MinibusModel(val simTime:Double,minibus: Minibus) : tornadofx.ItemViewMode
     val queue = minibus.queue.toList().observable()
 }
 
+

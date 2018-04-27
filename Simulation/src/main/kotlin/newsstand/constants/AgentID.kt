@@ -1,7 +1,5 @@
 package newsstand.constants
 
-import newsstand.components.minibus.MinibusManager
-
 object id {
     const val BossAgent = 10
     const val BossManager = 11
@@ -27,9 +25,12 @@ object id {
     const val MinibusManagerID = 51
     const val MinibusMovementID = 52
     const val MinibusMovementStartID = 53
+    const val ExitFromMinibusActionID = 54
+    const val ExitFromMinibusSchedulerID = 55
 
     const val AirCarRentalAgentID = 60
     const val AirCarRentalManagerID = 61
-    const val GetOffBusAtCarRentalID = 62
     const val CustomerServiceSchedulerID = 63
+    const val AirCarRentalMoveCustomerToQueueAction = 64
+    const val AssignEmployeeToCustomerAction = 65
 }

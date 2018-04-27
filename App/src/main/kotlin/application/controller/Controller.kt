@@ -1,39 +1,56 @@
 package application.controller
 
-import application.model.CustomerModel
-import application.model.EmployeeModel
-import application.model.MinibusModel
-import application.model.TerminalModel
+import application.model.*
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections.observableArrayList
-import javafx.concurrent.Task
 import newsstand.NewsstandSimualation
 import tornadofx.*
-
+import tornadofx.getValue
+import tornadofx.setValue
 
 class MyController : Controller() {
 
-     val minibuses = observableArrayList<MinibusModel>()
-     val terminals = observableArrayList<TerminalModel>()
-     val employees = observableArrayList<EmployeeModel>()
-     val carRentalQueue = observableArrayList<CustomerModel>()
-     val sim = NewsstandSimualation()
+    val intervalProperty = SimpleDoubleProperty(20.0)
+    var interval by intervalProperty
+
+    val durationProperty = SimpleDoubleProperty(2.0)
+    var duration by durationProperty
+
+
+    val minibuses = observableArrayList<MinibusModel>()
+    val queueT1 = observableArrayList<CustomerModel>()
+    val queueT2 = observableArrayList<CustomerModel>()
+    val carRentalQueue = observableArrayList<CustomerModel>()
+    val employees = observableArrayList<EmployeeModel>()
+    val sim = NewsstandSimualation()
 
     val simTime = SimpleStringProperty("Init")
-    lateinit var asyncThing: Task<Unit>
+    val simStateModel = SimpleObjectProperty<SimStateModel>()
 
     fun run() {
-        sim.setSimSpeed(75.0, 1.0)
+        sim.setSimSpeed(50.0, 2.0)
 
         sim.onRefreshUI {
+            simStateModel.set(SimStateModel(sim.getState()))
             sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
-            sim.getState().terminals.map(::TerminalModel).let(terminals::setAll)
+            sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
+            sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
             sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
-            sim.getState().acrQueue.map(::CustomerModel).let(carRentalQueue::setAll)
-            simTime.set(sim.currentTime().toString())
+            sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
+            simTime.set(sim.currentTime().format())
         }
-
         sim.onSimulationWillStart { println("idem") }
-        asyncThing = runAsync { sim.start() }
+        runAsync { try {sim.start()} catch (e:Exception){} }
+    }
+
+    fun setSimSpeed(){
+        sim.setSimSpeed(interval, duration)
+    }
+
+    fun fullSpeed() {
+        sim.setMaxSimSpeed()
     }
 }
+

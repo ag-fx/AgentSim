@@ -76,7 +76,7 @@ class TerminalManager(
         .let {
             it.minibus!!.source      = terminal.building
             it.minibus!!.destination = terminal.building.nextStop()
-            it.minibus!!.leftAt = mySim().currentTime()
+            it.minibus!!.leftAt      = mySim().currentTime()
             notice(it)
         }
 

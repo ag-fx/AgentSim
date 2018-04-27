@@ -21,7 +21,8 @@ class SurroundingAgent(
         TerminalTwoCustomerArrivalScheduler(mySim, this)
         addOwnMessages(
             mc.init,
-            mc.newCustomer
+            mc.newCustomer,
+            mc.customerLeaving
         )
     }
 

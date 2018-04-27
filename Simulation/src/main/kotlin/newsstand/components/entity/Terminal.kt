@@ -2,12 +2,15 @@ package newsstand.components.entity
 
 import OSPABA.Simulation
 import OSPDataStruct.SimQueue
+import OSPStat.Stat
 import OSPStat.WStat
+import newsstand.NewsstandSimualation
 
-abstract class Terminal(val building: Building, sim: Simulation) {
+abstract class Terminal(val building: Building, val sim: Simulation? = null) {
     val queue = SimQueue<Customer>(WStat(sim))
+    val timeInQueue = Stat()
 }
 
-class TerminalOne(sim: Simulation) : Terminal(Building.TerminalOne, sim)
+class TerminalOne(sim: Simulation?) : Terminal(Building.TerminalOne, sim)
 
-class TerminalTwo(sim: Simulation) : Terminal(Building.TerminalTwo, sim)
+class TerminalTwo(sim: Simulation?) : Terminal(Building.TerminalTwo, sim)

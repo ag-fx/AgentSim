@@ -28,7 +28,10 @@ abstract class EnterBusScheduler(
 
         mc.customerEnteredBus -> msg
             .createCopy()
-            .let { assistantFinished(it) }
+            .let {
+
+                assistantFinished(it)
+            }
 
         else -> throw IllegalStateException()
     }

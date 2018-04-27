@@ -8,9 +8,6 @@ import abaextensions.WrongMessageCode
 import abaextensions.toAgent
 import abaextensions.withCode
 import newsstand.constants.id
-import newsstand.constants.mc
-import newsstand.constants.mc.customerArrivalTerminalOne
-import newsstand.constants.mc.customerArrivalTerminalTwo
 import newsstand.constants.mc.init
 
 class BossManager(
@@ -31,29 +28,10 @@ class BossManager(
                 .toAgent(id.MinibusAgentID)
                 .withCode(init)
 
-            listOf(toSurrounding, toMinibus).forEach { notice(it) }
+            listOf(toSurrounding, toMinibus).forEach {
+                notice(it)
+            }
         }
-
-        customerArrivalTerminalOne -> message
-            .createCopy()
-            .toAgent(id.TerminalAgentID)
-            .let { notice(it) }
-
-        customerArrivalTerminalTwo -> message
-            .createCopy()
-            .toAgent(id.TerminalAgentID)
-            .let { notice(it) }
-
-        mc.terminalOneMinibusArrival,
-        mc.terminalTwoMinibusArrival -> message
-            .createCopy()
-            .toAgent(id.TerminalAgentID)
-            .let { notice(it) }
-
-        mc.airCarRentalMinibusArrival -> message
-            .createCopy()
-            .toAgent(id.AirCarRentalAgentID)
-            .let { notice(it) }
 
         else -> throw WrongMessageCode(message)
     }

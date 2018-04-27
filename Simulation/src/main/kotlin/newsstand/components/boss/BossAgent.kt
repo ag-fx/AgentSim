@@ -19,14 +19,7 @@ class BossAgent(
 
     init {
         BossManager(mySim, this)
-        addOwnMessages(
-            init,
-            customerArrivalTerminalOne,
-            customerArrivalTerminalTwo,
-            mc.terminalOneMinibusArrival,
-            mc.terminalTwoMinibusArrival,
-            mc.airCarRentalMinibusArrival
-        )
+        addOwnMessages(init)
     }
 
     fun start() = Message(null, mySim)

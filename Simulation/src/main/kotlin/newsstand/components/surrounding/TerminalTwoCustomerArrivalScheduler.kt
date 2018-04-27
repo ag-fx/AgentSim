@@ -8,7 +8,7 @@ import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
-import newsstand.components.Message
+import newsstand.NewsstandSimualation
 import newsstand.components.convert
 import newsstand.components.entity.Building
 import newsstand.constants.id
@@ -39,4 +39,7 @@ class TerminalTwoCustomerArrivalScheduler(
     }
 
     private val rnd = ExponentialRNG(3600.0 / 19.0)
+
+    override fun mySim() = super.mySim() as NewsstandSimualation
+
 }

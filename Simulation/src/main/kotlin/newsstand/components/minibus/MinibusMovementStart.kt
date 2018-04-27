@@ -23,7 +23,7 @@ class MinibusMovementStart(
             .createCopy()
             .withCode(mc.minibusArrivedToDestination)
             .convert()
-            .let { hold(it.minibus!!.secondsToDestination().also { println(it) }, it) }
+            .let { hold(it.minibus!!.secondsToDestination(), it) }
 
         mc.minibusArrivedToDestination -> msg
             .createCopy()

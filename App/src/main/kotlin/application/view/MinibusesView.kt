@@ -9,8 +9,8 @@ import tornadofx.*
 class MinibusesView : View("Minibusy") {
     private val controller: MyController by inject()
     private val selected = SimpleListProperty<CustomerModel>()
-    override val root = borderpane {
-        center = tableview(controller.minibuses) {
+    override val root = hbox {
+        tableview(controller.minibuses) {
             maxWidth = 500.0
             column("ID", MinibusModel::id).apply { isSortable = false }
             column("Odkial", MinibusModel::source).apply { isSortable = false }
@@ -23,10 +23,13 @@ class MinibusesView : View("Minibusy") {
                     ?: emptyList<CustomerModel>().observable())
             }
         }
-        right = tableview(selected) {
+        spacer()
+        tableview(selected) {
             column("Terminal", CustomerModel::building).apply { isSortable = false }
             column("Cas vstupu", CustomerModel::arrivedToSystem).apply { isSortable = false }
         }
+        spacer()
+
     }
 }
 

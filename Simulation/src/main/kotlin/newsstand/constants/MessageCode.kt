@@ -17,6 +17,11 @@ object mc {
     const val terminalTwoMinibusArrival = 601
 
     const val airCarRentalMinibusArrival = 700
-    const val customerGotOffBus = 701
-    const val customerServed = 702
+     const val customerServed = 702
+    const val customerService = 703
+    const val getCustomerFromBusRequest = 704
+    const val getCustomerFromBusResponse = 705
+    const val moveCustomerToQueueAtAirCarRental = 706
+
+    const val customerLeaving = 9999
 }

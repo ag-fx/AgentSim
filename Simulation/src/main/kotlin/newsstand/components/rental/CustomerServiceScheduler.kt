@@ -5,6 +5,7 @@ import OSPABA.IdList.start
 import OSPRNG.UniformContinuousRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
+import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc
 
@@ -17,11 +18,19 @@ class CustomerServiceScheduler(
         start -> msg
             .createCopy()
             .withCode(mc.customerServed)
-            .let { hold(rndServiceTime.sample(), it) }
+            .let {
+                hold(rndServiceTime.sample(), it)
+            }
 
         mc.customerServed -> msg
             .createCopy()
-            .let { assistantFinished(it) }
+            .convert()
+            .let {
+                val employee = it.employee!!
+                employee.isBusy = false
+                employee.serving = null
+                assistantFinished(it)
+            }
 
         else -> throw WrongMessageCode(msg)
     }

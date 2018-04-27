@@ -1,4 +1,10 @@
 package newsstand.components.entity
 
-data class Customer(val arrivedToSystem: Double, val building: Building)
+import OSPDataStruct.SimQueue
 
+data class Customer(
+    val arrivedToSystem: Double,
+    val building: Building
+){
+    override fun toString() = arrivedToSystem.toString()
+}

@@ -23,7 +23,9 @@ abstract class EnterBusAction(
         .createCopy()
         .convert()
         .let {
-            it.minibus!!.queue.push(terminal.queue.pop())
+            val customer = terminal.queue.pop()
+            terminal.timeInQueue.addSample(mySim().currentTime() - customer.arrivedToSystem)
+            it.minibus!!.queue.push(customer)
         }
 
 }

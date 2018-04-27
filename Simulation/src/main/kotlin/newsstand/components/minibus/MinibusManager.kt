@@ -38,13 +38,31 @@ class MinibusManager(
             .toAgentsAssistant(myAgent(), id.MinibusMovementID)
             .let { startContinualAssistant(it) }
 
-        finish -> msg
-            .createCopy()
-            .convert()
-            .toAgent(id.BossAgent)
-            .withCode(getTerminalArrivalCode(msg))
-            .let { notice(it) }
+        finish -> when (msg.sender()) {
+            is MinibusMovement,
+            is MinibusMovementStart -> msg
+                .createCopy()
+                .convert()
+                .toAgent(id.BossAgent)
+                .withCode(getTerminalArrivalCode(msg))
+                .let { notice(it) }
 
+            is ExitFromMinibusScheduler -> msg
+                .createCopy()
+                .withCode(mc.getCustomerFromBusResponse)
+                .let { response(it) }
+
+            else -> {
+            }
+        }
+
+    /** @see ExitFromMinibusScheduler **/
+        mc.getCustomerFromBusRequest -> msg
+            .createCopy()
+            .toAgentsAssistant(myAgent(), id.ExitFromMinibusSchedulerID)
+            .let {
+                startContinualAssistant(it)
+            }
 
         else -> throw WrongMessageCode(msg)
     }
@@ -53,8 +71,8 @@ class MinibusManager(
         val msg = msg.convert()
         val source = msg.minibus!!.source
         return when (source) {
-            Building.TerminalOne  -> mc.terminalOneMinibusArrival
-            Building.TerminalTwo  -> mc.terminalTwoMinibusArrival
+            Building.TerminalOne -> mc.terminalOneMinibusArrival
+            Building.TerminalTwo -> mc.terminalTwoMinibusArrival
             Building.AirCarRental -> mc.airCarRentalMinibusArrival
         }
 

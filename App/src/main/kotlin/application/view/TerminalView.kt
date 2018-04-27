@@ -1,25 +1,86 @@
 package application.view
 
 import application.controller.MyController
-import application.model.CustomerModel
-import application.model.TerminalModel
+import application.model.*
+import javafx.beans.property.Property
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleListProperty
+import javafx.beans.property.SimpleObjectProperty
+import javafx.event.EventTarget
+import javafx.geometry.Orientation
+import javafx.scene.control.TextField
+import javafx.scene.layout.Priority
+import javafx.scene.text.Text
+import javafx.util.StringConverter
+import newsstand.components.entity.Building
 import tornadofx.*
 
 class TerminalView : View("Terminals") {
     private val controller: MyController by inject()
-    private val selected = SimpleListProperty<CustomerModel>()
-    override val root = borderpane {
-        left = tableview(controller.terminals) {
-            maxWidth = 500.0
-            column("Terminal", TerminalModel::building).apply { isSortable = false }
-            onSelectionChange { selected.set(it?.queue) }
-        }
-        right = tableview(selected) {
-            column("Terminal", CustomerModel::building).apply { isSortable = false }
-            column("Cas vstupu", CustomerModel::arrivedToSystem).apply { isSortable = false }
+
+    override val root = vbox {
+        hbox {
+            Building
+                .values()
+                .filter { it != Building.AirCarRental }
+                .forEach {
+
+                    val queue = when (it) {
+                        Building.TerminalOne -> controller.queueT1
+                        Building.TerminalTwo -> controller.queueT2
+                        Building.AirCarRental -> TODO()
+                    }
+
+                    val avgTimeInQueue = when(it){
+                        Building.TerminalOne -> XSim { "Avg time in queue\t${(it.statQueueT1.mean() / 60).format()}" }
+                        Building.TerminalTwo -> XSim { "Avg time in queue\t${(it.statQueueT2.mean() / 60).format()}" }
+                        else -> TODO()
+                    }
+
+                    val length = XSim { "Queue length\t\t${queue.size}" }
+
+                    val avgLength = when (it) {
+                        Building.TerminalOne -> XSim { "Avg queue length\t${it.queueT1.mean().format()}" }
+                        Building.TerminalTwo -> XSim { "Avg queue length\t${it.queueT2.mean().format()}" }
+                        Building.AirCarRental -> TODO()
+                    }
+                    val maxLength = when (it) {
+                        Building.TerminalOne -> XSim { "Max queue length\t${it.queueT1.max().format()}" }
+                        Building.TerminalTwo -> XSim { "Max queue length\t${it.queueT2.max().format()}" }
+                        Building.AirCarRental -> TODO()
+                    }
+
+                    hbox {
+                        borderpane {
+                            center =  tableview(queue) {
+                                vgrow = Priority.ALWAYS
+                                hgrow = Priority.ALWAYS
+                                column("Terminal", CustomerModel::building).apply { isSortable = false }
+                                column("Cas vstupu", CustomerModel::arrivedToSystem).apply { isSortable = false }
+                            }
+                            right =  vbox {
+                                text(it.toString())
+                                vbox {
+                                    text(controller.simStateModel, converter = length)
+                                    text(controller.simStateModel, converter = avgLength)
+                                    text(controller.simStateModel, converter = maxLength)
+                                    text(controller.simStateModel, converter = avgTimeInQueue)
+                                }
+                            }
+                        }
+
+                    }
+                    spacer()
+                    separator {orientation = Orientation.VERTICAL}
+                }
+
         }
     }
 }
 
 
+fun <T> EventTarget.text(property: Property<T>, converter: StringConverter<T>, op: Text.() -> Unit = {}) = text().apply {
+    textProperty().bindBidirectional(property, converter)
+    ViewModel.register(textProperty(), property)
+    op(this)
+}

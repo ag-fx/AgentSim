@@ -8,6 +8,7 @@ import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
+import newsstand.NewsstandSimualation
 import newsstand.components.convert
 import newsstand.components.entity.Building
 import newsstand.constants.id
@@ -25,15 +26,20 @@ class TerminalOneCustomerArrivalScheduler(
             .withCode(newCustomer)
             .let { hold(rnd.sample(), it) }
 
-        newCustomer -> {
-            val cpy = msg.createCopy()
-            hold(rnd.sample(), cpy)
-            msg.convert().setNewCustomer(Building.TerminalOne)
-            assistantFinished(msg)
-        }
+        newCustomer -> msg
+            .createCopy()
+            .convert()
+            .let {
+                hold(rnd.sample(), it)
+                msg.convert().setNewCustomer(Building.TerminalOne)
+                assistantFinished(msg.createCopy())
+            }
 
         else -> throw WrongMessageCode(msg)
     }
 
     private val rnd = ExponentialRNG(3600.0 / 43.0)
+
+    override fun mySim() = super.mySim() as NewsstandSimualation
+
 }
