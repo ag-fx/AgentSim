@@ -16,9 +16,12 @@ class MainView : View("Hello TornadoFX") {
         top = vbox {
             hbox {
                 button("Run") { action { controller.run() } }
-                text(controller.simTime)
                 button("Full speed") { action { controller.fullSpeed() } }
                 button("Slow speed") { action { controller.setSimSpeed() } }
+                button("PAUSE") { action { controller.pause() } }
+                button("RESUME") { action { controller.resume() } }
+
+                text(controller.simTime)
             }
             separator()
         }
@@ -33,7 +36,7 @@ class MainView : View("Hello TornadoFX") {
         bottom = vbox {
             separator()
             text(controller.intervalProperty, converter = DoubleConv { "Interval : " + it.format() })
-            slider(min = 1, max = 100) {
+            slider(min = 1, max = 300) {
                 isShowTickLabels = true
                 valueProperty().bindBidirectional(controller.intervalProperty)
                 setOnMouseReleased { controller.setSimSpeed() }

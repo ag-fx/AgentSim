@@ -12,6 +12,7 @@ class Message : MessageForm {
     var customer: Customer? = null
     var minibus: Minibus? = null
     var employee: Employee? = null
+    var building: Building? = null
 
 
     constructor(customer: Customer? = null, sim: Simulation?) : super(sim) {
@@ -22,7 +23,7 @@ class Message : MessageForm {
         customer = original.customer
         minibus = original.minibus
         employee = original.employee
-
+        building = original.building
     }
 
     fun setNewCustomer(building: Building) {

@@ -6,6 +6,7 @@ import OSPABA.MessageForm
 import OSPABA.Scheduler
 import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
+import abaextensions.TestSample
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
 import newsstand.NewsstandSimualation
@@ -30,9 +31,9 @@ class TerminalTwoCustomerArrivalScheduler(
             .createCopy()
             .convert()
             .let {
-                hold(rnd.sample(), it)
-                msg.convert().setNewCustomer(Building.TerminalTwo)
-                assistantFinished(msg.createCopy())
+               hold(rnd.sample(), it)
+               msg.convert().setNewCustomer(Building.TerminalTwo)
+               assistantFinished(msg.createCopy())
             }
 
         else -> throw WrongMessageCode(msg)

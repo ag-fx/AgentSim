@@ -18,18 +18,14 @@ class TerminalAgent(
 
     init {
         TerminalManager(mySim, this)
-        EnterBusTerminalOneScheduler(mySim, this, terminalOne)
-        EnterBusTerminalTwoScheduler(mySim, this, terminalTwo)
-
-        EnterBusT1(mySim, this, terminalOne)
-        EnterBusT2(mySim, this, terminalTwo)
+        AddToTerminalQueueAction(mySim, this)
 
         addOwnMessages(
             mc.customerArrivalTerminalOne,
             mc.customerArrivalTerminalTwo,
             mc.terminalOneMinibusArrival,
             mc.terminalTwoMinibusArrival,
-            mc.customerEnteredBus
+            mc.enterMinibusResponse
         )
     }
 

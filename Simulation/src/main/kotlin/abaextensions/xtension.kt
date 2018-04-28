@@ -14,3 +14,8 @@ fun MessageForm.withCode(code: Int) = apply { setCode(code) }
 
 fun Agent.addOwnMessages(vararg ids: Int) = ids.forEach { addOwnMessage(it) }
 fun Agent.noticeManager(msg: MessageForm) = manager().notice(msg)
+fun <A> A.log(s:String) = if(false) println(s) else Unit
+
+class TestSample(val x :Double = 20.0) {
+    fun sample() = x
+}

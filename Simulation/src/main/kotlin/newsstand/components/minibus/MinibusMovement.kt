@@ -7,6 +7,7 @@ import OSPABA.Scheduler
 import OSPABA.Simulation
 import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
+import abaextensions.log
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
@@ -30,9 +31,12 @@ class MinibusMovement(
                 it.minibus!!.apply {
                     isInDestination = false
                     leftAt = mySim().currentTime()
+                  //  destination = source.nextStop()
                 }
 
                 hold(it.minibus!!.secondsToDestination(), it)
+                log("Minibus left ${it.minibus!!.source} @ ${mySim().currentTime()}")
+
             }
 
         mc.minibusArrivedToDestination -> {
@@ -42,6 +46,8 @@ class MinibusMovement(
                 source = destination
                 destination = destination.nextStop()
             }
+            log("Minibus arrived ${msg.minibus!!.source} @ ${mySim().currentTime()}")
+
             assistantFinished(msg)
         }
 

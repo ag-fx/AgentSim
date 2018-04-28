@@ -47,7 +47,7 @@ class SurroundingManager(
         .withCode(id)
         .let { notice(it) }
 
-    private fun customerLeaving(msg: MessageForm) = msg.convert().let {
+    private fun customerLeaving(msg: MessageForm) = msg.createCopy().convert().let {
         val customer = it.customer!!
         myAgent().timeInSystem.addSample(mySim().currentTime() - customer.arrivedToSystem)
     }

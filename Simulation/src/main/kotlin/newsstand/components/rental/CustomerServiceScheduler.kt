@@ -3,6 +3,7 @@ package newsstand.components.rental
 import OSPABA.*
 import OSPABA.IdList.start
 import OSPRNG.UniformContinuousRNG
+import abaextensions.TestSample
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
 import newsstand.components.convert
@@ -26,15 +27,15 @@ class CustomerServiceScheduler(
             .createCopy()
             .convert()
             .let {
-                val employee = it.employee!!
-                employee.isBusy = false
-                employee.serving = null
+                val customer = it.customer!!
+                val employee = myAgent().employees.first { it.serving == (customer) }
+                employee.done()
                 assistantFinished(it)
             }
 
         else -> throw WrongMessageCode(msg)
     }
 
-    private val rndServiceTime = UniformContinuousRNG(6 * 60.0 - 4 * 60, 6.0 * 60 + 4 * 60)
-
+    private val rndServiceTime = UniformContinuousRNG((6 * 60.0) - (4 * 60), (6.0 * 60) + (4 * 60))
+    override fun myAgent() = super.myAgent() as AirCarRentalAgent
 }

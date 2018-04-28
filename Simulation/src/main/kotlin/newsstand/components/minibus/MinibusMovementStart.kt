@@ -5,6 +5,7 @@ import OSPABA.IdList.start
 import OSPABA.MessageForm
 import OSPABA.Scheduler
 import OSPABA.Simulation
+import abaextensions.log
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
@@ -23,7 +24,10 @@ class MinibusMovementStart(
             .createCopy()
             .withCode(mc.minibusArrivedToDestination)
             .convert()
-            .let { hold(it.minibus!!.secondsToDestination(), it) }
+            .let {
+                hold(it.minibus!!.secondsToDestination(), it)
+                log("Minibus start @ ${mySim().currentTime()}")
+            }
 
         mc.minibusArrivedToDestination -> msg
             .createCopy()
@@ -34,6 +38,8 @@ class MinibusMovementStart(
                     source = Building.TerminalOne
                     destination = source.nextStop()
                 }
+                log("Minibus arrived T1 @ ${mySim().currentTime()}")
+
                 assistantFinished(it)
             }
 

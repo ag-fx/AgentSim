@@ -52,5 +52,9 @@ class MyController : Controller() {
     fun fullSpeed() {
         sim.setMaxSimSpeed()
     }
+
+    fun pause() = sim.pauseSimulation()
+
+    fun resume() = sim.resumeSimulation()
 }
 

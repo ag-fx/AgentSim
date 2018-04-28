@@ -13,7 +13,7 @@ class MoveCustomerToQueueAction(
     override fun execute(msg: MessageForm) = msg
         .convert()
         .let {
-            myAgent().queue.push(it.customer)
+            myAgent().queue.push(it.customer!!)
             it.customer = null
         }
 

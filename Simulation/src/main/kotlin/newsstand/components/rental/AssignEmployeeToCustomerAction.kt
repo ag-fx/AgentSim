@@ -18,6 +18,7 @@ class AssignEmployeeToCustomerAction(
         .let {
             val employee = it.employee!!
             val customer = myAgent().queue.pop()
+            it.customer = customer
             employee.isBusy = true
             employee.serving = customer
         }

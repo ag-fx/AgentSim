@@ -9,39 +9,31 @@ import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc
 
-class ExitFromMinibusScheduler(
+class EnterToMinibusMinibusScheduler(
     mySim: Simulation,
     parent: Agent
-) : Scheduler(id.ExitFromMinibusSchedulerID, mySim, parent) {
+) : Scheduler(id.EnterToMinibusSchedulerID, mySim, parent) {
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
+
         start -> msg
             .createCopy()
-            .withCode(mc.customerExitedMinibus)
-            .convert()
-            .let {
-                it.customer = null
-                if (it.minibus!!.isNotEmpty())
-                    hold(rndExitBus.sample(), it)
-                else
-                    assistantFinished(it)
-            }
+            .withCode(mc.customerEnteredMinibus)
+            .let { hold(rndEnterBus.sample(), it) }
 
-        mc.customerExitedMinibus -> msg
+        mc.customerEnteredMinibus -> msg
             .createCopy()
             .convert()
             .let {
-                it.customer = it.minibus!!.queue.pop()!!
+                it.minibus!!.queue.push(it.customer!!)
                 assistantFinished(it)
             }
 
         else -> TODO()
     }
 
-    private val rndExitBus = UniformContinuousRNG(8.0 - 4, 8.0 + 4)
+    private val rndEnterBus = UniformContinuousRNG(12.0 - 2, 12.0 + 2)
 
     override fun myAgent() = super.myAgent() as MinibusAgent
 
 }
-
-

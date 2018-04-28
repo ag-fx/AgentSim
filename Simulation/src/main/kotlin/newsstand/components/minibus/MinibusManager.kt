@@ -38,6 +38,11 @@ class MinibusManager(
             .toAgentsAssistant(myAgent(), id.MinibusMovementID)
             .let { startContinualAssistant(it) }
 
+        mc.enterMinibusRequest -> msg
+            .createCopy()
+            .toAgentsAssistant(myAgent(), id.EnterToMinibusSchedulerID)
+            .let { startContinualAssistant(it) }
+
         finish -> when (msg.sender()) {
             is MinibusMovement,
             is MinibusMovementStart -> msg
@@ -52,17 +57,19 @@ class MinibusManager(
                 .withCode(mc.getCustomerFromBusResponse)
                 .let { response(it) }
 
+            is EnterToMinibusMinibusScheduler -> msg
+                .createCopy()
+                .withCode(mc.enterMinibusResponse)
+                .let { response(it) }
+
             else -> {
             }
         }
 
-    /** @see ExitFromMinibusScheduler **/
         mc.getCustomerFromBusRequest -> msg
             .createCopy()
             .toAgentsAssistant(myAgent(), id.ExitFromMinibusSchedulerID)
-            .let {
-                startContinualAssistant(it)
-            }
+            .let { startContinualAssistant(it) }
 
         else -> throw WrongMessageCode(msg)
     }

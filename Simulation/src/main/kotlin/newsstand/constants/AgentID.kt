@@ -15,18 +15,15 @@ object id {
 
     const val TerminalAgentID = 40
     const val TerminalManagerID = 41
-    const val GetOnBusTerminalOne = 42
-    const val GetOnBusTerminalTwo = 43
-    const val EnterBusActionT1 = 44
-    const val EnterBusActionT2 = 45
+    const val AddToTerminalQueueAction = 42
 
 
-    const val MinibusAgentID = 50
+    val MinibusAgentID = 50
     const val MinibusManagerID = 51
     const val MinibusMovementID = 52
     const val MinibusMovementStartID = 53
-    const val ExitFromMinibusActionID = 54
     const val ExitFromMinibusSchedulerID = 55
+    const val EnterToMinibusSchedulerID = 56
 
     const val AirCarRentalAgentID = 60
     const val AirCarRentalManagerID = 61

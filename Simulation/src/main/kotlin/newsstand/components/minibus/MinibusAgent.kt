@@ -14,18 +14,23 @@ class MinibusAgent(
     parent: Agent
 ) : Agent(id.MinibusAgentID, mySim, parent) {
 
-    val minibuses = List(10) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
+    val minibuses = List(1) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
 
     init {
         MinibusManager(mySim, this)
         MinibusMovementStart(mySim, this)
         MinibusMovement(mySim, this)
         ExitFromMinibusScheduler(mySim, this)
+        EnterToMinibusMinibusScheduler(mySim, this)
         addOwnMessages(
             init,
-            mc.minibusGoTo,789,
+            mc.minibusGoTo,
             mc.minibusArrivedToDestination,
-            mc.getCustomerFromBusRequest
+            mc.getCustomerFromBusRequest,
+            mc.customerExitedMinibus,
+            mc.customerEnteredMinibus,
+            mc.enterMinibusRequest
+
         )
     }
 
