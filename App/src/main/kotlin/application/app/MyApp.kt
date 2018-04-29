@@ -1,6 +1,10 @@
 package application.app
 
 import application.view.MainView
-import tornadofx.App
+import tornadofx.*
 
-class MyApp : App(MainView::class)
+class MyApp : App(MainView::class){
+    init {
+        importStylesheet("/css/style.css")
+    }
+}

@@ -4,7 +4,6 @@ import OSPABA.Simulation
 import OSPDataStruct.SimQueue
 import OSPStat.Stat
 import OSPStat.WStat
-import newsstand.NewsstandSimualation
 
 abstract class Terminal(val building: Building, val sim: Simulation? = null) {
     val queue = SimQueue<Customer>(WStat(sim))

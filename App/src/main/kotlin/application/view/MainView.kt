@@ -13,8 +13,13 @@ class MainView : View("Hello TornadoFX") {
     private val controller: MyController by inject()
 
     override val root = borderpane {
+        minWidth = 1000.0
+        vgrow = Priority.ALWAYS
+        hgrow = Priority.ALWAYS
         top = vbox {
             hbox {
+                addClass("menu-bar")
+                spacing = 10.0
                 button("Run") { action { controller.run() } }
                 button("Full speed") { action { controller.fullSpeed() } }
                 button("Slow speed") { action { controller.setSimSpeed() } }
@@ -23,18 +28,15 @@ class MainView : View("Hello TornadoFX") {
 
                 text(controller.simTime)
             }
-            separator()
         }
         center = tabpane {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
-            vgrow = Priority.ALWAYS
-            hgrow = Priority.ALWAYS
+
             tab(MinibusesView::class)
             tab(TerminalView::class)
             tab(CarRentalView::class)
         }
         bottom = vbox {
-            separator()
             text(controller.intervalProperty, converter = DoubleConv { "Interval : " + it.format() })
             slider(min = 1, max = 300) {
                 isShowTickLabels = true

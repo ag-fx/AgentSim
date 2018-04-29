@@ -11,10 +11,11 @@ import newsstand.constants.mc.init
 
 class MinibusAgent(
     mySim: Simulation,
-    parent: Agent
+    parent: Agent,
+    minibuses: Int
 ) : Agent(id.MinibusAgentID, mySim, parent) {
 
-    val minibuses = List(1) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
+    val minibuses = List(minibuses) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
 
     init {
         MinibusManager(mySim, this)

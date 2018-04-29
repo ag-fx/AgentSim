@@ -39,6 +39,50 @@ class DoubleConv(val f: (Double) -> String) : StringConverter<Number>() {
     override fun fromString(string: String?): Double {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+}
+
+class DoubleTimeConv : StringConverter<Double>() {
+    override fun fromString(string: String?) = TODO()
+
+    private val time = MyTime()
+    override fun toString(`object`: Double?) = `object`?.let {
+        time.actualTime = `object`
+        time.toString()
+    } ?: "0"
+
+
+}
+
+class MyTime {
+    var actualTime: Double = 0.0
+        set(value) {
+            field = value
+            calculateTime(value)
+        }
+
+    private var d: Int = 0
+    private var h: Int = 0
+    private var m: Int = 0
+    private var s: Double = 0.toDouble()
+    private val lengthOfDayHours = 24.0
+
+    private fun calculateTime(actualTime: Double) {
+        s = 0.0
+        m = 0
+        h = 0
+        d = 0
+
+        h = Math.floor(actualTime / 3600 % this.lengthOfDayHours).toInt()
+
+        m = Math.floor((actualTime / 3600 % lengthOfDayHours - h) * 60).toInt()
+        s = actualTime % 60
+
+        d = Math.floor(actualTime / 3600 / this.lengthOfDayHours).toInt()
+
+    }
+
+    override fun toString() =
+        if (d > 0) "Deň $d" + " " + h + ":" + m + ":" + String.format("%.0f", s) + " " else "" + h + ":" + m + ":" + String.format("%.0f", s) + " "
 
 
 }

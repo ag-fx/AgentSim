@@ -12,11 +12,12 @@ import newsstand.constants.mc
 
 class AirCarRentalAgent(
     mySim: Simulation,
-    parent: Agent
+    parent: Agent,
+    employees: Int
 ) : Agent(id.AirCarRentalAgentID, mySim, parent) {
 
     val queue = SimQueue<Customer>(WStat(mySim))
-    val employees = List(1) { Employee(it) }
+    val employees = List(employees) { Employee(it) }
 
     init {
         AirCarRentalManager(mySim, this)

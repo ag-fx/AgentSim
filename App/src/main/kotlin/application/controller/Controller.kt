@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections.observableArrayList
-import newsstand.NewsstandSimualation
+import newsstand.NewsstandSimulation
 import tornadofx.*
 import tornadofx.getValue
 import tornadofx.setValue
@@ -24,7 +24,7 @@ class MyController : Controller() {
     val queueT2 = observableArrayList<CustomerModel>()
     val carRentalQueue = observableArrayList<CustomerModel>()
     val employees = observableArrayList<EmployeeModel>()
-    val sim = NewsstandSimualation()
+    val sim = NewsstandSimulation()
 
     val simTime = SimpleStringProperty("Init")
     val simStateModel = SimpleObjectProperty<SimStateModel>()
