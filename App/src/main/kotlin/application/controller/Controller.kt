@@ -33,23 +33,23 @@ class MyController : Controller() {
         sim.setSimSpeed(50.0, 2.0)
 
         sim.onRefreshUI {
-            simStateModel.set(SimStateModel(sim.getState()))
-            sim.getState().minibuses    .map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
-            sim.getState().queueT1      .map (::CustomerModel).let(queueT1::setAll)
-            sim.getState().queueT2      .map (::CustomerModel).let(queueT2::setAll)
-            sim.getState().acrEmployees .map (::EmployeeModel).let(employees::setAll)
-            sim.getState().queueAcr     .map (::CustomerModel).let(carRentalQueue::setAll)
-            simTime.set(sim.currentTime())
+            try {
+                //            simStateModel.set(SimStateModel(sim.getState()))
+                sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
+                //   sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
+                // sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
+                // sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
+                // sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
+                simTime.set(sim.currentTime())
+            } catch (e: IndexOutOfBoundsException) {
+                println(e)
+                println()
+            } catch (e: Throwable) {
+                println(e)
+            }
         }
-        sim.onSimulationWillStart { println("idem") }
-        runAsync {
-            Runnable({
-                try {
-                    sim.start()
-                } catch (e: Exception) {
-                }
-            }).run()
-        }
+
+        runAsync { sim.start() }
     }
 
     fun setSimSpeed() {

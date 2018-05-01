@@ -14,7 +14,7 @@ import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
 
-class SurroundingManager(
+class   SurroundingManager(
     mySim: Simulation,
     myAgent: Agent
 ) : Manager(id.SurroundingManager, mySim, myAgent) {

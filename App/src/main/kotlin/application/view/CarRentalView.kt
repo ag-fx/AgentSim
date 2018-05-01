@@ -32,9 +32,9 @@ class CarRentalView : View("AirCarRental") {
                 vbox {
                     addClass("card")
                     label("Statistics").addClass("card-title")
-                    text(controller.simStateModel, converter = XSim { "Cur queue length\t\t${controller.carRentalQueue.size}" })
-                    text(controller.simStateModel, converter = XSim { "Avg queue length\t\t${it.queueAcr.mean().format()}" })
-                    text(controller.simStateModel, converter = XSim { "Max queue length\t${it.queueAcr.max().format()}" })
+                    label(controller.simStateModel, converter = XSim { "Cur queue length\t\t${controller.carRentalQueue.size}" })
+                    label(controller.simStateModel, converter = XSim { "Avg queue length\t\t${it.queueAcr.mean().format()}" })
+                    label(controller.simStateModel, converter = XSim { "Max queue length\t${it.queueAcr.max().format()}" })
 
                 }
             }

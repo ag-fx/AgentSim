@@ -2,6 +2,7 @@ package newsstand.components.surrounding
 
 import OSPABA.*
 import OSPABA.IdList.start
+import OSPRNG.ExponentialRNG
 import OSPRNG.UniformDiscreteRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
@@ -19,8 +20,7 @@ abstract class CustomerArrivalScheduler(
     val terminal: Building,
     simID: Int
 ) : Scheduler(simID, mySim, parent) {
-
-
+ var sex = 0
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         start -> msg
@@ -32,9 +32,13 @@ abstract class CustomerArrivalScheduler(
             .createCopy()
             .convert()
             .let {
-                hold(timeBetweenArrivals(), it)
+                val time = timeBetweenArrivals()
                 customerArrived(msg.convert())
-                assistantFinished(msg.createCopy())
+                println("${sex++} ${msg.convert().customer}")
+                if (time != 0.0) {
+                    hold(timeBetweenArrivals(), it)
+                } else
+                    assistantFinished(msg.createCopy())
             }
 
         else -> throw WrongMessageCode(msg)
@@ -42,9 +46,23 @@ abstract class CustomerArrivalScheduler(
 
     abstract fun customerArrived(msg: Message)
 
-    abstract fun timeBetweenArrivals() : Double
+    abstract fun timeBetweenArrivals(): Double
 
-    protected val interval = 60 * 60 * 15.0
+    protected abstract val means: List<Double>
+
+    protected val generators by lazy { means.map { ExponentialRNG(3600.0 / it) } }
+
+    protected val interval = 60 * 15.0
+
+    protected val startTime = 60 * 60 * 16.0
+
+     fun getIntervalIndex(simTime: Double): Int {
+        for (i in 0 until means.size) {
+            if (simTime in (startTime + (interval * i))..(startTime + (interval * (i + 1))))
+                return i
+        }
+        return 0
+    }
 
     protected fun createOneCustomer() = CustomerType.One(Customer(mySim().currentTime(), terminal))
 
@@ -66,5 +84,7 @@ abstract class CustomerArrivalScheduler(
     }
 
     private val rndGroupSizeGenerator = UniformDiscreteRNG(0, 1)
+
+    private val rndSkipInterval = UniformDiscreteRNG(0, 1)
 
 }

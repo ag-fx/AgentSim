@@ -1,12 +1,12 @@
 package newsstand.components.boss
 
-import OSPABA.Agent
-import OSPABA.Simulation
+import OSPABA.*
 import abaextensions.addOwnMessages
 import abaextensions.noticeManager
 import abaextensions.toAgent
 import abaextensions.withCode
 import newsstand.components.Message
+import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.customerArrivalTerminalOne
@@ -19,7 +19,8 @@ class BossAgent(
 
     init {
         BossManager(mySim, this)
-        addOwnMessages(init)
+        TestSchedler(mySim, this)
+        addOwnMessages(init, -1)
     }
 
     fun start() = Message(null, mySim)
@@ -27,3 +28,4 @@ class BossAgent(
         .withCode(init)
         .let { noticeManager(it) }
 }
+

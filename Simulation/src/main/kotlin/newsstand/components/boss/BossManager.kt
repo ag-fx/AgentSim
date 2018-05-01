@@ -1,12 +1,12 @@
 package newsstand.components.boss
 
-import OSPABA.Agent
-import OSPABA.Manager
-import OSPABA.MessageForm
-import OSPABA.Simulation
+import OSPABA.*
+import OSPABA.IdList.finish
 import abaextensions.WrongMessageCode
 import abaextensions.toAgent
+import abaextensions.toAgentsAssistant
 import abaextensions.withCode
+import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc.init
 
@@ -17,7 +17,7 @@ class BossManager(
 
     override fun processMessage(message: MessageForm) = when (message.code()) {
 
-        init -> {
+        finish -> {
             val toSurrounding = message
                 .createCopy()
                 .toAgent(id.SurroundingAgent)
@@ -33,6 +33,14 @@ class BossManager(
             }
         }
 
+        init -> message
+            .createCopy()
+            .convert()
+            .toAgentsAssistant(myAgent(),-10)
+            .let { startContinualAssistant(it) }
+
+
         else -> throw WrongMessageCode(message)
     }
 }
+

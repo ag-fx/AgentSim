@@ -85,10 +85,10 @@ class TerminalView : View("Terminals") {
                                     vbox {
                                         vgrow = Priority.ALWAYS
                                         hgrow = Priority.ALWAYS
-                                        text(controller.simStateModel, converter = length).addClass("label")
-                                        text(controller.simStateModel, converter = avgLength).addClass("label")
-                                        text(controller.simStateModel, converter = maxLength).addClass("label")
-                                        text(controller.simStateModel, converter = avgTimeInQueue).addClass("label")
+                                        textfield(controller.simStateModel, converter = length).addClass("label")
+                                        textfield(controller.simStateModel, converter = avgLength).addClass("label")
+                                        textfield(controller.simStateModel, converter = maxLength).addClass("label")
+                                        textfield(controller.simStateModel, converter = avgTimeInQueue).addClass("label")
                                     }
                                 }
                             }
@@ -101,9 +101,3 @@ class TerminalView : View("Terminals") {
     }
 }
 
-
-fun <T> EventTarget.text(property: Property<T>, converter: StringConverter<T>, op: Text.() -> Unit = {}) = text().apply {
-    textProperty().bindBidirectional(property, converter)
-    ViewModel.register(textProperty(), property)
-    op(this)
-}

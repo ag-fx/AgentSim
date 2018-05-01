@@ -4,7 +4,7 @@ data class Customer(
     val arrivedToSystem: Double,
     val building: Building
 ) {
-    override fun toString() = arrivedToSystem.toString()
+    override fun toString() = "${arrivedToSystem.toString()} $building"
 }
 
 data class Group(

@@ -23,7 +23,7 @@ class MainView : View("Hello TornadoFX") {
                 button("Slow speed") { action { controller.setSimSpeed() } }
                 button("PAUSE") { action { controller.pause() } }
                 button("RESUME") { action { controller.resume() } }
-                text(controller.simTime,converter = NumberTimeConv())
+                textfield(controller.simTime,converter = NumberTimeConv())
             }
         }
         center = tabpane {
@@ -34,15 +34,15 @@ class MainView : View("Hello TornadoFX") {
             tab(CarRentalView::class)
         }
         bottom = vbox {
-            text(controller.intervalProperty, converter = DoubleConv { "Interval : " + it.format() })
-            slider(min = 1, max = 300) {
+            textfield(controller.intervalProperty, converter = DoubleConv { "Interval : " + it.format() })
+            slider(min = 1, max = 60*60) {
                 isShowTickLabels = true
                 valueProperty().bindBidirectional(controller.intervalProperty)
                 setOnMouseReleased { controller.setSimSpeed() }
 
             }
-            text(controller.durationProperty, converter = DoubleConv { "Duration : " + it.format() })
-            slider(min = 1, max = 5) {
+            textfield(controller.durationProperty, converter = DoubleConv { "Duration : " + it.format() })
+            slider(min = 0.1, max = 3) {
                 isShowTickLabels = true
                 valueProperty().bindBidirectional(controller.durationProperty)
                 setOnMouseReleased { controller.setSimSpeed() }
