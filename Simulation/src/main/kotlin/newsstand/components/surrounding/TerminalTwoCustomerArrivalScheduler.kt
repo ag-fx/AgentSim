@@ -43,8 +43,7 @@ class TerminalTwoCustomerArrivalScheduler(
             val b = means[alfaPlusJedna]
             var scale = s * means[alfa] / means[alfaPlusJedna]
             generated = scale + (indexBoundary - interval)
-            println()
-        }
+         }
         val gen = (generated).toTime()
         if (generated - mySim().currentTime() < 0)
             return 0.0

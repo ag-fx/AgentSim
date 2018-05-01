@@ -34,7 +34,8 @@ abstract class CustomerArrivalScheduler(
             .let {
                 val time = timeBetweenArrivals()
                 customerArrived(msg.convert())
-                println("${sex++} ${msg.convert().customer}")
+                 if(msg.convert().customer!!.building.equals(Building.TerminalOne))
+                     println("${sex++} ${msg.convert().customer}")
                 if (time != 0.0) {
                     hold(timeBetweenArrivals(), it)
                 } else
