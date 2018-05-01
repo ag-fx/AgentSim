@@ -26,7 +26,7 @@ class MyController : Controller() {
     val employees = observableArrayList<EmployeeModel>()
     val sim = NewsstandSimulation()
 
-    val simTime = SimpleStringProperty("Init")
+    val simTime = SimpleDoubleProperty(0.0)
     val simStateModel = SimpleObjectProperty<SimStateModel>()
 
     fun run() {
@@ -34,18 +34,25 @@ class MyController : Controller() {
 
         sim.onRefreshUI {
             simStateModel.set(SimStateModel(sim.getState()))
-            sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
-            sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
-            sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
-            sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
-            sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
-            simTime.set(sim.currentTime().format())
+            sim.getState().minibuses    .map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
+            sim.getState().queueT1      .map (::CustomerModel).let(queueT1::setAll)
+            sim.getState().queueT2      .map (::CustomerModel).let(queueT2::setAll)
+            sim.getState().acrEmployees .map (::EmployeeModel).let(employees::setAll)
+            sim.getState().queueAcr     .map (::CustomerModel).let(carRentalQueue::setAll)
+            simTime.set(sim.currentTime())
         }
         sim.onSimulationWillStart { println("idem") }
-        runAsync { try {sim.start()} catch (e:Exception){} }
+        runAsync {
+            Runnable({
+                try {
+                    sim.start()
+                } catch (e: Exception) {
+                }
+            }).run()
+        }
     }
 
-    fun setSimSpeed(){
+    fun setSimSpeed() {
         sim.setSimSpeed(interval, duration)
     }
 

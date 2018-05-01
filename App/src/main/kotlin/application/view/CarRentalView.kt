@@ -4,6 +4,7 @@ import application.controller.MyController
 import application.model.*
 import javafx.beans.property.SimpleListProperty
 import javafx.geometry.Insets
+import javafx.scene.layout.Priority
 import tornadofx.*
 
 class CarRentalView : View("AirCarRental") {
@@ -31,9 +32,9 @@ class CarRentalView : View("AirCarRental") {
                 vbox {
                     addClass("card")
                     label("Statistics").addClass("card-title")
-                    text(controller.simStateModel, converter = XSim { "Queue length\t\t${controller.carRentalQueue.size}" })
+                    text(controller.simStateModel, converter = XSim { "Cur queue length\t\t${controller.carRentalQueue.size}" })
                     text(controller.simStateModel, converter = XSim { "Avg queue length\t\t${it.queueAcr.mean().format()}" })
-                    text(controller.simStateModel, converter = XSim { "Max queue length\t\t${it.queueAcr.max().format()}" })
+                    text(controller.simStateModel, converter = XSim { "Max queue length\t${it.queueAcr.max().format()}" })
 
                 }
             }
@@ -48,11 +49,14 @@ class CarRentalView : View("AirCarRental") {
 
                 tableview(controller.employees) {
                     minWidth = 300.0
+                    vgrow = Priority.ALWAYS
+                    hgrow = Priority.ALWAYS
                     smartResize()
                     column("Id", EmployeeModel::id).apply { isSortable = false }
                     column("Obsluhuje", EmployeeModel::isBusy).apply { isSortable = false }
                     column("Zakaznik", EmployeeModel::serving) {
                         isSortable = false
+                        converter(CustomerConverter())
                     }
 
                 }

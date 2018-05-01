@@ -41,13 +41,25 @@ class DoubleConv(val f: (Double) -> String) : StringConverter<Number>() {
     }
 }
 
+class NumberTimeConv : StringConverter<Number>() {
+    override fun fromString(string: String?) = TODO()
+
+    private val time = MyTime()
+    override fun toString(`object`: Number?) = `object`?.let{it as Double}?.let {
+        time.actualTime = it
+        return time.toString()
+    } ?: "0"
+
+
+}
+
 class DoubleTimeConv : StringConverter<Double>() {
     override fun fromString(string: String?) = TODO()
 
     private val time = MyTime()
     override fun toString(`object`: Double?) = `object`?.let {
         time.actualTime = `object`
-        time.toString()
+        return time.toString()
     } ?: "0"
 
 

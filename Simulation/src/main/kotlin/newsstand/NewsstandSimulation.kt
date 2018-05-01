@@ -12,11 +12,11 @@ data class Config(val minibuses: Int = 10, val employees: Int = 10)
 
 class NewsstandSimulation(config: Config = Config()) : Simulation() {
 
-   private val boss = BossAgent(this)
-   private val surrounding = SurroundingAgent(this, boss)
-   private val terminal = TerminalAgent(this, boss)
-   private val minibus = MinibusAgent(this, boss, config.minibuses)
-   private val airCarRentalAgent = AirCarRentalAgent(this, boss, config.employees)
+    private val boss = BossAgent(this)
+    private val surrounding = SurroundingAgent(this, boss)
+    private val terminal = TerminalAgent(this, boss)
+    private val minibus = MinibusAgent(this, boss, config.minibuses)
+    private val airCarRentalAgent = AirCarRentalAgent(this, boss, config.employees)
 
     internal var maxSimTime: Double = 0.0
     internal var warmUpTime = 0.0 //60 * 60 * 60 * 5.0
@@ -56,4 +56,5 @@ private fun Stat.clearStat() {
 fun main(args: Array<String>) {
     val s = NewsstandSimulation()
     s.start()
+    println("21.71416177 milan")
 }//19.58008985

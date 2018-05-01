@@ -78,6 +78,7 @@ class TerminalView : View("Terminals") {
                             right = hbox {
                                 paddingLeft = 24
                                vbox {
+                                   prefWidth = 200.0
                                     addClass("card")
                                     label("Statistics").addClass("card-title")
                                     text(it.toString())

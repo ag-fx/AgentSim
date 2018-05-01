@@ -1,9 +1,7 @@
 package application.view
 
 import application.controller.MyController
-import application.model.DoubleConv
-import application.model.XSim
-import application.model.format
+import application.model.*
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable
@@ -25,8 +23,7 @@ class MainView : View("Hello TornadoFX") {
                 button("Slow speed") { action { controller.setSimSpeed() } }
                 button("PAUSE") { action { controller.pause() } }
                 button("RESUME") { action { controller.resume() } }
-
-                text(controller.simTime)
+                text(controller.simTime,converter = NumberTimeConv())
             }
         }
         center = tabpane {
