@@ -3,7 +3,6 @@ package newsstand.components.rental
 import OSPABA.*
 import OSPABA.IdList.start
 import OSPRNG.UniformContinuousRNG
-import abaextensions.TestSample
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
 import newsstand.components.convert
@@ -19,16 +18,14 @@ class CustomerServiceScheduler(
         start -> msg
             .createCopy()
             .withCode(mc.customerServed)
-            .let {
-                hold(rndServiceTime.sample(), it)
-            }
+            .let { hold(rndServiceTime.sample(), it) }
 
         mc.customerServed -> msg
             .createCopy()
             .convert()
             .let {
-                val customer = it.customer!!
-                val employee = myAgent().employees.first { it.serving == (customer) }
+                val customer = it.group!!.leader
+                val employee = myAgent().employees.first { it.serving == customer }
                 employee.done()
                 assistantFinished(it)
             }

@@ -10,7 +10,6 @@ import newsstand.components.Message
 import newsstand.components.convert
 import newsstand.components.entity.Building
 import newsstand.components.entity.Customer
-import newsstand.components.entity.CustomerType
 import newsstand.components.entity.Group
 import newsstand.constants.mc
 
@@ -20,7 +19,7 @@ abstract class CustomerArrivalScheduler(
     val terminal: Building,
     simID: Int
 ) : Scheduler(simID, mySim, parent) {
- var sex = 0
+    var i = 0
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         start -> msg
@@ -34,10 +33,11 @@ abstract class CustomerArrivalScheduler(
             .let {
                 val time = timeBetweenArrivals()
                 customerArrived(msg.convert())
-                 if(msg.convert().customer!!.building.equals(Building.TerminalOne))
-                     println("${sex++} ${msg.convert().customer}")
+                println("${i++} ${msg.convert().group}")
                 if (time != 0.0) {
                     hold(timeBetweenArrivals(), it)
+                    assistantFinished(msg.createCopy())
+
                 } else
                     assistantFinished(msg.createCopy())
             }
@@ -57,7 +57,7 @@ abstract class CustomerArrivalScheduler(
 
     protected val startTime = 60 * 60 * 16.0
 
-     fun getIntervalIndex(simTime: Double): Int {
+    fun getIntervalIndex(simTime: Double): Int {
         for (i in 0 until means.size) {
             if (simTime in (startTime + (interval * i))..(startTime + (interval * (i + 1))))
                 return i
@@ -65,18 +65,17 @@ abstract class CustomerArrivalScheduler(
         return 0
     }
 
-    protected fun createOneCustomer() = CustomerType.One(Customer(mySim().currentTime(), terminal))
+    protected fun createGroup() =
+        Group(
+            leader = Customer(mySim().currentTime(), terminal),
+            family = List(groupSize()) { Customer(mySim().currentTime(), terminal) }.toMutableList()
+        )
 
-    protected fun createGroup(sizeOfGroup: Int) = CustomerType.Group(
-        Group(leader = Customer(mySim().currentTime(), terminal),
-            family = List(sizeOfGroup) { Customer(mySim().currentTime(), terminal) }
-        ))
-
-    protected fun groupSize(): Int {
+    private fun groupSize(): Int {
         val probability = rndGroupSizeGenerator.sample()
         val groupSize = when (probability) {
-            in .0..0.6 -> 0
-            in .6..0.8 -> 1
+            in .0..0.6  -> 0
+            in .6..0.8  -> 1
             in .8..0.95 -> 2
             in .95..1.0 -> 3
             else -> throw IllegalStateException("Probability is from 0-1")
@@ -85,7 +84,5 @@ abstract class CustomerArrivalScheduler(
     }
 
     private val rndGroupSizeGenerator = UniformDiscreteRNG(0, 1)
-
-    private val rndSkipInterval = UniformDiscreteRNG(0, 1)
 
 }

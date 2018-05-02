@@ -2,13 +2,14 @@ package newsstand
 
 import OSPABA.Simulation
 import OSPStat.Stat
+import abaextensions.toSimQueue
 import newsstand.components.boss.BossAgent
 import newsstand.components.minibus.MinibusAgent
 import newsstand.components.rental.AirCarRentalAgent
 import newsstand.components.surrounding.SurroundingAgent
 import newsstand.components.terminal.TerminalAgent
 
-data class Config(val minibuses: Int = 10, val employees: Int = 10)
+data class Config(val minibuses: Int = 2, val employees: Int = 2)
 
 class NewsstandSimulation(config: Config = Config()) : Simulation() {
 
@@ -43,7 +44,8 @@ class NewsstandSimulation(config: Config = Config()) : Simulation() {
         queueT2 = terminal.terminalTwo.queue,
         timeStatQueueT1 = terminal.terminalOne.timeInQueue,
         timeStatQueueT2 = terminal.terminalTwo.timeInQueue,
-        queueAcr = airCarRentalAgent.queue,
+        queueAcr = airCarRentalAgent.queue.map { it.leader }.toSimQueue(),
+        queueAcrToT3 = airCarRentalAgent.queueToTerminal3,
         acrEmployees = airCarRentalAgent.employees,
         minibuses = minibus.minibuses
     )
@@ -58,3 +60,4 @@ fun main(args: Array<String>) {
     s.start()
     println("21.71416177 milan")
 }//19.58008985
+

@@ -8,7 +8,7 @@ object id {
     const val SurroundingManager = 21
     const val TerminalOneCustomerArrivalScheduler = 22
     const val TerminalTwoCustomerArrivalScheduler = 23
-    const val AirCarRentalCustomerArrivalScheduler = 23
+    const val AirCarRentalCustomerArrivalScheduler = 24
 
     const val NewsstandAgent = 30
     const val NewsstandManager = 31

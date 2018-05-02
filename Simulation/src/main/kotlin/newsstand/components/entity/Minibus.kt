@@ -10,11 +10,12 @@ data class Minibus(
     val averageSpeed: Double = 35000.0 / 3600.0,
     val capacity: Int = 12,
     var isInDestination: Boolean = false,
-    val queue: SimQueue<Customer> = SimQueue()
+    val queue: SimQueue<Group> = SimQueue()
 ) {
     fun secondsToDestination() = source.secondsToNext(averageSpeed)
-    fun isNotFull() = queue.size <capacity
+    fun isNotFull() = queue.size < capacity
     fun isNotEmpty() = queue.isNotEmpty()
+    fun freeSeats() = capacity - queue.size
 
     fun distanceFromSource(currentSimTime: Double): Double {
         return if (!isInDestination)

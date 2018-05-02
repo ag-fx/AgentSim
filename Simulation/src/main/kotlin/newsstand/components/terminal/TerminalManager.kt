@@ -9,11 +9,11 @@ import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
-import newsstand.components.entity.Customer
+import newsstand.components.entity.Group
 import newsstand.components.entity.Terminal
 import newsstand.constants.id
 import newsstand.constants.mc
-
+import java.util.*
 
 class TerminalManager(
     mySim: Simulation,
@@ -23,7 +23,7 @@ class TerminalManager(
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         mc.customerArrivalTerminalOne,
-        mc.customerArrivalTerminalTwo -> addCustomerToQueue(msg)
+        mc.customerArrivalTerminalTwo -> addGroupToQueue(msg)
 
         mc.terminalOneMinibusArrival -> handleBusOnTerminal(myAgent().terminalOne, msg)
 
@@ -35,7 +35,7 @@ class TerminalManager(
         }
     }
 
-    private fun handleBusOnTerminal(msg:MessageForm) = msg.createCopy().convert().let {
+    private fun handleBusOnTerminal(msg: MessageForm) = msg.createCopy().convert().let {
         when (it.building!!) {
             Building.TerminalOne -> handleBusOnTerminal(myAgent().terminalOne, msg)
             Building.TerminalTwo -> handleBusOnTerminal(myAgent().terminalTwo, msg)
@@ -44,31 +44,53 @@ class TerminalManager(
     }
 
     private fun handleBusOnTerminal(terminal: Terminal, msg: MessageForm) {
-        if (terminal.queue.isNotEmpty() && msg.convert().minibus!!.isNotFull()) {
-            val customer = terminal.queue.pop()
-            requestLoading(msg, customer, terminal)
-        } else{
+        val queue = terminal.queue
+        val minibus = msg.createCopy().convert().minibus!!
+        val mapa = mutableMapOf<Double, Group>()
+        queue.forEach {
+            mapa[it.arrivedToSystem]?.add(it) ?: mapa.put(it.arrivedToSystem, Group(it))
+        }
+
+        if (terminal.queue.isNotEmpty()) {
+            val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
+            val groups : Queue<Group> = LinkedList(groupx)
+            val group = groups.peek()
+            if (group.size() <= minibus.freeSeats()) {
+                group.everyone().forEach { queue.remove(it) }
+                requestLoading(msg, group, terminal)
+            }
+        } else {
             msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
         }
 
     }
 
-    private fun requestLoading(msg: MessageForm, customer: Customer, terminal: Terminal) = msg
+
+    private fun requestLoading(msg: MessageForm, group: Group, terminal: Terminal) = msg
         .createCopy()
         .convert()
         .apply {
-            this.customer = customer
+            this.group = group
             this.building = terminal.building
         }
         .withCode(mc.enterMinibusRequest)
         .toAgent(id.MinibusAgentID)
         .let { request(it) }
 
+    /** @see AddToTerminalQueueAction **/
+    private fun addGroupToQueue(msg: MessageForm) {
+        msg.convert().group!!.everyone().forEach {
+            msg
+                .createCopy()
+                .convert()
+                .apply {
+                    oneCustomer = it
+                }
+                .toAgentsAssistant(myAgent(), id.AddToTerminalQueueAction)
+                .let { execute(it) }
+        }
 
-    private fun addCustomerToQueue(msg: MessageForm) = msg
-        .createCopy()
-        .toAgentsAssistant(myAgent(), id.AssignEmployeeToCustomerAction)
-        .let { execute(it) }
+    }
 
     override fun myAgent() = super.myAgent() as TerminalAgent
 }

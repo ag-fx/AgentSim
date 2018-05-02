@@ -6,6 +6,7 @@ object mc {
     const val newCustomer = 200
     const val customerArrivalTerminalOne = 230
     const val customerArrivalTerminalTwo = 240
+    const val customerArrivalTerminalAcr = 250
 
     const val minibusGoTo = 500
 

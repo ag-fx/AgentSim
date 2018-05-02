@@ -9,10 +9,11 @@ data class Customer(
 
 data class Group(
     val leader : Customer,
-    val family : List<Customer>
-)
-
-sealed class CustomerType<out First, out Value> {
-    data class One<out A> (val value: A): CustomerType<A, Nothing>()
-    data class Group<out A> (val value: A): CustomerType<Nothing, A>()
+    val family : MutableList<Customer> = mutableListOf()
+){
+    fun add(customer: Customer) = family.add(customer)
+    fun everyone() = listOf(listOf(leader),family).flatten().toMutableList()
+    fun size() = everyone().size
+    fun arrivedToSystem() = leader.arrivedToSystem
+    fun building() = leader.building
 }

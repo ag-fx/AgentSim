@@ -3,7 +3,6 @@ package newsstand.components.minibus
 import OSPABA.*
 import OSPABA.IdList.start
 import OSPRNG.UniformContinuousRNG
-import abaextensions.TestSample
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.constants.id
@@ -20,18 +19,20 @@ class ExitFromMinibusScheduler(
             .withCode(mc.customerExitedMinibus)
             .convert()
             .let {
-                it.customer = null
-                if (it.minibus!!.isNotEmpty())
-                    hold(rndExitBus.sample(), it)
-                else
-                    assistantFinished(it)
+                if (it.minibus!!.isNotEmpty()) {
+                    val exitTime = it.minibus!!.queue.peek().everyone().fold(0.0) { acc, _ -> acc + rndExitBus.sample() }
+                    hold(exitTime, it)
+                } else {
+                    val msg = it.createCopy().apply { group = null }
+                    assistantFinished(msg)
+                }
             }
 
         mc.customerExitedMinibus -> msg
             .createCopy()
             .convert()
             .let {
-                it.customer = it.minibus!!.queue.pop()!!
+                it.group = it.minibus!!.queue.pop()!!
                 assistantFinished(it)
             }
 

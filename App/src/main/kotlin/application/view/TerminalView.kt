@@ -85,10 +85,10 @@ class TerminalView : View("Terminals") {
                                     vbox {
                                         vgrow = Priority.ALWAYS
                                         hgrow = Priority.ALWAYS
-                                        textfield(controller.simStateModel, converter = length).addClass("label")
-                                        textfield(controller.simStateModel, converter = avgLength).addClass("label")
-                                        textfield(controller.simStateModel, converter = maxLength).addClass("label")
-                                        textfield(controller.simStateModel, converter = avgTimeInQueue).addClass("label")
+                                        label(controller.simStateModel, converter = length).addClass("label")
+                                        label(controller.simStateModel, converter = avgLength).addClass("label")
+                                        label(controller.simStateModel, converter = maxLength).addClass("label")
+                                        label(controller.simStateModel, converter = avgTimeInQueue).addClass("label")
                                     }
                                 }
                             }

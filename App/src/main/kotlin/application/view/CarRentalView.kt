@@ -46,7 +46,6 @@ class CarRentalView : View("AirCarRental") {
             vbox {
                 addClass("card")
                 text("Employees").addClass("card-title")
-
                 tableview(controller.employees) {
                     minWidth = 300.0
                     vgrow = Priority.ALWAYS
@@ -58,7 +57,23 @@ class CarRentalView : View("AirCarRental") {
                         isSortable = false
                         converter(CustomerConverter())
                     }
-
+                }
+            }
+            hbox {
+                paddingLeft = 24
+                vbox {
+                    addClass("card")
+                    text("Customers to T3").addClass("card-title")
+                    tableview(controller.carRentalQueueToT3) {
+                        vgrow = Priority.ALWAYS
+                        hgrow = Priority.ALWAYS
+                        smartResize()
+                        column("Terminal", CustomerModel::building).apply { isSortable = false }
+                        column("Cas vstupu", CustomerModel::arrivedToSystem) {
+                            isSortable = false
+                            converter(DoubleTimeConv())
+                        }
+                    }
                 }
             }
         }

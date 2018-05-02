@@ -17,8 +17,9 @@ class SurroundingAgent(
 
     init {
         SurroundingManager(mySim, this)
-        TerminalOneCustomerArrivalScheduler(mySim, this)
-        TerminalTwoCustomerArrivalScheduler(mySim, this)
+        TerminalOneCustomerArrivalScheduler (mySim, this)
+        TerminalTwoCustomerArrivalScheduler (mySim, this)
+        AirCarRentalCustomerArrivalScheduler(mySim, this)
         addOwnMessages(
             mc.init,
             mc.newCustomer,

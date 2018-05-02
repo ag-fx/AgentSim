@@ -14,7 +14,7 @@ import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
 
-class   SurroundingManager(
+class SurroundingManager(
     mySim: Simulation,
     myAgent: Agent
 ) : Manager(id.SurroundingManager, mySim, myAgent) {
@@ -31,8 +31,9 @@ class   SurroundingManager(
             }
 
         finish -> when (message.sender()) {
-            is TerminalOneCustomerArrivalScheduler -> message.notifyTerminalArrival(mc.customerArrivalTerminalOne)
-            is TerminalTwoCustomerArrivalScheduler -> message.notifyTerminalArrival(mc.customerArrivalTerminalTwo)
+            is TerminalOneCustomerArrivalScheduler  -> message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalOne)
+            is TerminalTwoCustomerArrivalScheduler  -> message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalTwo)
+            is AirCarRentalCustomerArrivalScheduler -> message.notifyCustomerArrival(id.AirCarRentalAgentID, mc.customerArrivalTerminalAcr)
             else -> throw IllegalStateException("Wrong finish sender")
         }
 
@@ -41,15 +42,15 @@ class   SurroundingManager(
         else -> throw WrongMessageCode(message)
     }
 
-    private fun MessageForm.notifyTerminalArrival(id: Int) = this
+    private fun MessageForm.notifyCustomerArrival(agentID: Int, messageCode: Int) = this
         .createCopy()
-        .toAgent(newsstand.constants.id.TerminalAgentID)
-        .withCode(id)
+        .toAgent(agentID)
+        .withCode(messageCode)
         .let { notice(it) }
 
     private fun customerLeaving(msg: MessageForm) = msg.createCopy().convert().let {
-        val customer = it.customer!!
-        myAgent().timeInSystem.addSample(mySim().currentTime() - customer.arrivedToSystem)
+        val customer = it.group!!
+        myAgent().timeInSystem.addSample(mySim().currentTime() - customer.arrivedToSystem())
     }
 
     override fun myAgent() = super.myAgent() as SurroundingAgent

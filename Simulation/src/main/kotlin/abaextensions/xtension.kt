@@ -12,10 +12,12 @@ fun MessageForm.toAgentsAssistant(agentId: Int, assistantId: Int) = apply { setA
 fun MessageForm.toAgentsAssistant(agent: Agent, assistantId: Int) = apply { setAddressee(agent.findAssistant(assistantId)) }
 fun MessageForm.withCode(code: Int) = apply { setCode(code) }
 
+
 fun Agent.addOwnMessages(vararg ids: Int) = ids.forEach { addOwnMessage(it) }
 fun Agent.noticeManager(msg: MessageForm) = manager().notice(msg)
 fun <A> A.log(s:String) = if(false) println(s) else Unit
 
+fun <A> List<A>.toSimQueue() = SimQueue<A>().apply { this@toSimQueue.forEach { this.add(it) } }
 class TestSample(val x :Double = 20.0) {
     fun sample() = x
 }

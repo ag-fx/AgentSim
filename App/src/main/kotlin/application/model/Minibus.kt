@@ -12,7 +12,7 @@ class MinibusModel(val simTime:Double,minibus: Minibus) : tornadofx.ItemViewMode
     val capacity = bind(Minibus::capacity)
     val distanceToDestination = minibus.distanceFromDestination(simTime).toProperty()
     val isInDestination = bind(Minibus::isInDestination)
-    val queue = minibus.queue.toList().observable()
+    val queue = minibus.queue.map { it.everyone() }.toList().flatten().observable()
 }
 
 

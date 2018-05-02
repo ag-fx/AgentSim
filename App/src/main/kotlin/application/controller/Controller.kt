@@ -23,23 +23,27 @@ class MyController : Controller() {
     val queueT1 = observableArrayList<CustomerModel>()
     val queueT2 = observableArrayList<CustomerModel>()
     val carRentalQueue = observableArrayList<CustomerModel>()
+    val carRentalQueueToT3 = observableArrayList<CustomerModel>()
     val employees = observableArrayList<EmployeeModel>()
-    val sim = NewsstandSimulation()
+    val sim = NewsstandSimulation().apply {
+        setSimSpeed(50.0, 2.0)
+    }
 
     val simTime = SimpleDoubleProperty(0.0)
     val simStateModel = SimpleObjectProperty<SimStateModel>()
 
-    fun run() {
-        sim.setSimSpeed(50.0, 2.0)
+    fun run() = runAsync {
 
         sim.onRefreshUI {
             try {
-                //            simStateModel.set(SimStateModel(sim.getState()))
+                val x = sim.getState()
+               // runLater { simStateModel.set(SimStateModel(sim.getState())) }
                 sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
-                //   sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
-                // sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
-                // sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
-                // sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
+                sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
+                sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
+                sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
+                sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
+                sim.getState().queueAcrToT3.map(::CustomerModel).let(carRentalQueueToT3::setAll)
                 simTime.set(sim.currentTime())
             } catch (e: IndexOutOfBoundsException) {
                 println(e)
@@ -49,7 +53,7 @@ class MyController : Controller() {
             }
         }
 
-        runAsync { sim.start() }
+        sim.start()
     }
 
     fun setSimSpeed() {
