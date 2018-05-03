@@ -35,7 +35,7 @@ class MyController : Controller() {
         sim.onRefreshUI {
             try {
                 val x = sim.getState()
-            //    runLater { simStateModel.set(SimStateModel(x)) }
+                runLater { simStateModel.set(SimStateModel(x)) }
                 sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
                 sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
                 sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)

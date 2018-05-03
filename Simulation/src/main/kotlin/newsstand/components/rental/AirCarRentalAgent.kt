@@ -20,10 +20,10 @@ class AirCarRentalAgent(
     employees: Int
 ) : Agent(id.AirCarRentalAgentID, mySim, parent), Clearable {
 
-    var totalCustomers = 0
-    val queue = SimQueue<Group>(WStat(mySim))
+    var totalCustomers   = 0
+    val queue            = SimQueue<Group>   (WStat(mySim))
     val queueToTerminal3 = SimQueue<Customer>(WStat(mySim))
-    val employees = List(employees) { Employee(it) }
+    val employees        = List(employees) { Employee(it) }
 
     init {
         AirCarRentalManager(mySim, this)

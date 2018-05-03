@@ -36,15 +36,11 @@ abstract class CustomerArrivalScheduler(
             .let {
                 val time = timeBetweenArrivals()
                 customerArrived(msg.convert())
-               // println("${i++} ${msg.convert().group}")
-
                 if( mySim().currentTime() >= 60*60*20.5 + const.WarmUpTime)
                     assistantFinished(msg.createCopy())
-
                 if (time != 0.0) {
                     hold(timeBetweenArrivals(), it)
                     assistantFinished(msg.createCopy())
-
                 } else
                     assistantFinished(msg.createCopy())
             }
@@ -52,9 +48,11 @@ abstract class CustomerArrivalScheduler(
         else -> throw WrongMessageCode(msg)
     }
 
-    abstract fun customerArrived(msg: Message)
+    private fun customerArrived(msg: Message) {
+        msg.group = createGroup()
+    }
 
-    protected open fun timeBetweenArrivals(): Double {
+    private fun timeBetweenArrivals(): Double {
         val generated: Double
         var interval = 0
         if (mySim().currentTime() <= const.WarmUpTime) {
@@ -66,7 +64,6 @@ abstract class CustomerArrivalScheduler(
             interval = (time/intervalGap).roundToInt()
             if(interval==18) return 0.0
             generated = generators[interval].sample()
-            //println()
         }
         var genTime = generated + mySim().currentTime()
         var indexBound = intervalGap * interval + intervalGap + const.WarmUpTime
@@ -89,17 +86,7 @@ abstract class CustomerArrivalScheduler(
 
     protected val intervalGap = 60 * 15.0
 
-    protected val startTime =  const.WarmUpTime
-
-    fun getIntervalIndex(simTime: Double): Int {
-        for (i in 0 until means.size) {
-            if (simTime in (startTime + (intervalGap * i))..(startTime + (intervalGap * (i + 1))))
-                return i
-        }
-        return 0
-    }
-
-    protected fun createGroup() =
+    private fun createGroup() =
         Group(
             leader =                     Customer(mySim().currentTime(), terminal),
             family = List(groupSize()) { Customer(mySim().currentTime(), terminal) }.toMutableList()

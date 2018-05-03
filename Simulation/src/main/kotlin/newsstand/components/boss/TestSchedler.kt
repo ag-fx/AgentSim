@@ -3,7 +3,6 @@ package newsstand.components.boss
 import OSPABA.*
 import abaextensions.withCode
 import newsstand.components.convert
-import newsstand.constants.const
 
 class TestSchedler(mySim: Simulation,
                    parent: Agent

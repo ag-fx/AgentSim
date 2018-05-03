@@ -3,6 +3,7 @@ package application.model
 import OSPDataStruct.SimQueue
 import javafx.util.StringConverter
 import newsstand.SimState
+import newsstand.constants.const
 import tornadofx.*
 import java.text.DecimalFormat
 
@@ -72,7 +73,7 @@ class MyTime {
     var actualTime: Double = 0.0
         set(value) {
             field = value
-            calculateTime(value)
+            calculateTime(value + const.FirstKnownInterval - const.WarmUpTime )
         }
 
     private var d: Int = 0
@@ -99,5 +100,11 @@ class MyTime {
     override fun toString() =
         if (d > 0) "Deň $d" + " " + h + ":" + m + ":" + String.format("%.0f", s) + " " else "" + h + ":" + m + ":" + String.format("%.0f", s) + " "
 
+
+}
+
+fun main(args: Array<String>) {
+    val x = MyTime().apply { actualTime = const.FirstKnownInterval - const.WarmUpTime    }
+    println(x.toString())
 
 }
