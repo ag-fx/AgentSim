@@ -15,9 +15,19 @@ class AddToTerminalQueueAction(
         .convert()
         .let {
             when(it.code()){
-                mc.customerArrivalTerminalOne -> myAgent().terminalOne.queue.push(it.oneCustomer!!)
-                mc.customerArrivalTerminalTwo -> myAgent().terminalTwo.queue.push(it.oneCustomer!!)
+                mc.customerArrivalTerminalOne ->  {
+                    myAgent().terminalOne.queue.push(it.oneCustomer!!)
+                    myAgent().terminalOne.totalCustomers++
+                    Unit
+                }
+                mc.customerArrivalTerminalTwo ->{
+                   myAgent().terminalTwo.queue.push(it.oneCustomer!!)
+                   myAgent().terminalTwo.totalCustomers++
+                    Unit
+                }
+                else -> {}
             }
+
         }
 
     override fun myAgent() = super.myAgent() as TerminalAgent

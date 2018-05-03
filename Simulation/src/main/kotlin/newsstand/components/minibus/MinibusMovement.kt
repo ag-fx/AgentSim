@@ -31,7 +31,7 @@ class MinibusMovement(
                 it.minibus!!.apply {
                     isInDestination = false
                     leftAt = mySim().currentTime()
-                  //  destination = source.nextStop()
+                    destination = source.nextStop(this)
                 }
 
                 hold(it.minibus!!.secondsToDestination(), it)
@@ -44,7 +44,7 @@ class MinibusMovement(
             msg.minibus!!.apply {
                 isInDestination = true
                 source = destination
-                destination = destination.nextStop()
+                destination = destination.nextStop(this)
             }
             log("Minibus arrived ${msg.minibus!!.source} @ ${mySim().currentTime()}")
 

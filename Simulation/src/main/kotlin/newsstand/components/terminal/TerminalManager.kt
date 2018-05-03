@@ -29,11 +29,38 @@ class TerminalManager(
 
         mc.terminalTwoMinibusArrival -> handleBusOnTerminal(myAgent().terminalTwo, msg)
 
+        mc.terminalThreeMinibusArrival -> requestPeopleFromMinibus(msg)
+
         mc.enterMinibusResponse -> handleBusOnTerminal(msg)
+
+        mc.getCustomerFromBusResponse ->
+            if (msg.convert().group != null) {
+                sendGroupHome(msg)
+                requestPeopleFromMinibus(msg)
+            } else
+                msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
+
+        mc.clearLengthStat -> {
+            myAgent().terminalOne.queue.lengthStatistic().clear()
+            myAgent().terminalTwo.queue.lengthStatistic().clear()
+        }
 
         else -> {
         }
     }
+
+
+    private fun requestPeopleFromMinibus(msg: MessageForm) = msg
+        .createCopy()
+        .withCode(mc.getCustomerFromBusRequest)
+        .toAgent(id.MinibusAgentID)
+        .let { request(it) }
+
+    private fun sendGroupHome(msg: MessageForm) = msg
+        .createCopy()
+        .withCode(mc.customerLeaving)
+        .toAgent(id.SurroundingAgent)
+        .let { notice(it) }
 
     private fun handleBusOnTerminal(msg: MessageForm) = msg.createCopy().convert().let {
         when (it.building!!) {
@@ -53,7 +80,7 @@ class TerminalManager(
 
         if (terminal.queue.isNotEmpty()) {
             val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
-            val groups : Queue<Group> = LinkedList(groupx)
+            val groups: Queue<Group> = LinkedList(groupx)
             val group = groups.peek()
             if (group.size() <= minibus.freeSeats()) {
                 group.everyone().forEach { queue.remove(it) }
@@ -64,7 +91,6 @@ class TerminalManager(
         }
 
     }
-
 
     private fun requestLoading(msg: MessageForm, group: Group, terminal: Terminal) = msg
         .createCopy()
@@ -89,7 +115,6 @@ class TerminalManager(
                 .toAgentsAssistant(myAgent(), id.AddToTerminalQueueAction)
                 .let { execute(it) }
         }
-
     }
 
     override fun myAgent() = super.myAgent() as TerminalAgent

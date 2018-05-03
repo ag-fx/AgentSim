@@ -78,9 +78,10 @@ class MinibusManager(
         val msg = msg.convert()
         val source = msg.minibus!!.source
         return when (source) {
-            Building.TerminalOne -> mc.terminalOneMinibusArrival
-            Building.TerminalTwo -> mc.terminalTwoMinibusArrival
-            Building.AirCarRental -> mc.airCarRentalMinibusArrival
+            Building.TerminalOne   -> mc.terminalOneMinibusArrival
+            Building.TerminalTwo   -> mc.terminalTwoMinibusArrival
+            Building.TerminalThree -> mc.terminalThreeMinibusArrival
+            Building.AirCarRental  -> mc.airCarRentalMinibusArrival
         }
 
     }

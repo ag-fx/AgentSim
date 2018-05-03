@@ -39,7 +39,7 @@ class ExitFromMinibusScheduler(
         else -> TODO()
     }
 
-    private val rndExitBus = UniformContinuousRNG(8.0 - 4, 8.0 + 4)
+    private val rndExitBus = UniformContinuousRNG(6.0 - 4, 6.0 + 4)
 
     override fun myAgent() = super.myAgent() as MinibusAgent
 

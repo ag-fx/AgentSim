@@ -6,6 +6,7 @@ import newsstand.SimState
 import tornadofx.*
 import java.text.DecimalFormat
 
+
 class SimStateModel(sim: SimState = initState) : ItemViewModel<SimState>(sim) {
     val queueT1 = sim.queueT1.lengthStatistic()
     val statQueueT1 = sim.timeStatQueueT1
@@ -13,6 +14,8 @@ class SimStateModel(sim: SimState = initState) : ItemViewModel<SimState>(sim) {
     val queueT2 = sim.queueT2.lengthStatistic()
     val queueAcr = sim.queueAcr.lengthStatistic()
 }
+
+
 
 val initState = SimState(
     queueT1 = SimQueue(),
@@ -45,7 +48,7 @@ class NumberTimeConv : StringConverter<Number>() {
     override fun fromString(string: String?) = TODO()
 
     private val time = MyTime()
-    override fun toString(`object`: Number?) = `object`?.let{it as Double}?.let {
+    override fun toString(`object`: Number?) = `object`?.let { it as Double }?.let {
         time.actualTime = it
         return time.toString()
     } ?: "0"

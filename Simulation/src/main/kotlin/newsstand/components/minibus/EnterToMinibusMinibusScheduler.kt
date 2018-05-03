@@ -30,7 +30,7 @@ class EnterToMinibusMinibusScheduler(
             .let {
                 val group = msg.createCopy().convert().group!!
                 it.minibus!!.queue.push(group)
-                it.group = null
+                //  it.group = null
                 assistantFinished(it)
             }
 

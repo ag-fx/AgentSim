@@ -27,12 +27,13 @@ class TerminalView : View("Terminals") {
             Building
                 .values()
                 .filter { it != Building.AirCarRental }
+                .filter { it != Building.TerminalThree }
                 .forEach {
 
                     val queue = when (it) {
                         Building.TerminalOne -> controller.queueT1
                         Building.TerminalTwo -> controller.queueT2
-                        Building.AirCarRental -> TODO()
+                        else -> throw IllegalStateException()
                     }
 
                     val avgTimeInQueue = when (it) {
@@ -46,18 +47,17 @@ class TerminalView : View("Terminals") {
                     val avgLength = when (it) {
                         Building.TerminalOne -> XSim { "Avg queue length  \t${it.queueT1.mean().format()}" }
                         Building.TerminalTwo -> XSim { "Avg queue length  \t${it.queueT2.mean().format()}" }
-                        Building.AirCarRental -> TODO()
+                        else -> throw IllegalStateException()
                     }
                     val maxLength = when (it) {
                         Building.TerminalOne -> XSim { "Max queue length\t${it.queueT1.max().format()}" }
                         Building.TerminalTwo -> XSim { "Max queue length\t${it.queueT2.max().format()}" }
-                        Building.AirCarRental -> TODO()
+                        else -> throw IllegalStateException()
                     }
 
                     hbox {
                         borderpane {
                             padding = Insets(20.0)
-
                             center = vbox {
                                 vgrow = Priority.ALWAYS
                                 hgrow = Priority.ALWAYS

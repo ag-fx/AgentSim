@@ -2,6 +2,7 @@ package newsstand.constants
 
 object mc {
     const val init = 100
+    const val clearLengthStat = 101
 
     const val newCustomer = 200
     const val customerArrivalTerminalOne = 230
@@ -27,6 +28,9 @@ object mc {
     const val getCustomerFromBusRequest = 704
     const val getCustomerFromBusResponse = 705
     const val moveCustomerToQueueAtAirCarRental = 706
+
+    const val terminalThreeMinibusArrival = 800
+
 
     const val customerLeaving = 9999
 }

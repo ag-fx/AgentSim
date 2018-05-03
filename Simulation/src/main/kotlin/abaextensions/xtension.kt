@@ -18,6 +18,8 @@ fun Agent.noticeManager(msg: MessageForm) = manager().notice(msg)
 fun <A> A.log(s:String) = if(false) println(s) else Unit
 
 fun <A> List<A>.toSimQueue() = SimQueue<A>().apply { this@toSimQueue.forEach { this.add(it) } }
+
+
 class TestSample(val x :Double = 20.0) {
     fun sample() = x
 }

@@ -5,17 +5,17 @@ import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.constants.const
 
-class TestSchedler(mySim: Simulation,
-                   parent: Agent
-) : Scheduler(-10, mySim, parent) {
+class AfterWarmUpScheduler(mySim: Simulation,
+                           parent: Agent
+) : Scheduler(-11, mySim, parent) {
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         IdList.start -> msg
             .createCopy()
-            .withCode(-1)
-            .let { hold(0.0, it) }
+            .withCode(-11)
+            .let { hold(const.WarmUpTime, it) }
 
-        -1 -> msg
+        -11 -> msg
             .createCopy()
             .convert()
             .let { assistantFinished(it) }
@@ -23,4 +23,3 @@ class TestSchedler(mySim: Simulation,
         else -> TODO()
     }
 }
-

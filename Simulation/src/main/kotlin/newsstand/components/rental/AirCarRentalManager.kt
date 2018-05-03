@@ -48,31 +48,41 @@ class AirCarRentalManager(
             is CustomerServiceScheduler -> serviceFinished(msg)
             else -> TODO()
         }
-    //   mc.enterMinibusRequest -> sendGroupToT3(msg)
 
-        else -> println(msg)
+        mc.enterMinibusResponse ->
+            if (myAgent().queueToTerminal3.isEmpty())
+                goToNextStop(msg)
+            else
+                sendGroupToT3(msg)
+
+        mc.clearLengthStat -> {
+            myAgent().queue.lengthStatistic().clear()
+            myAgent().queueToTerminal3.lengthStatistic().clear()
+        }
+        else -> Unit //println(msg)
 
     }
 
     private fun sendGroupToT3(msg: MessageForm) {
-//        val msg = msg.createCopy().convert()
-//        val queue = myAgent().queueToTerminal3
-//        val minibus = msg.minibus!!
-//        val mapa = mutableMapOf<Double, Group>()
-//        queue.forEach {
-//            mapa[it.arrivedToSystem]?.add(it) ?: mapa.put(it.arrivedToSystem, Group(it))
-//        }
-//        if (queue.isNotEmpty()) {
-//            val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
-//            val groups : Queue<Group> = LinkedList(groupx)
-//            val group = groups.peek()
-//            if (group.size() <= minibus.freeSeats()) {
-//                group.everyone().forEach { queue.remove(it) }
-//                requestLoading(msg, group)
-//            }
-//        } else {
-//            msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
-//        }
+        val msg = msg.createCopy().convert()
+        val queue = myAgent().queueToTerminal3
+        val minibus = msg.minibus!!
+        val mapa = mutableMapOf<Double, Group>()
+        queue.forEach {
+            mapa[it.arrivedToSystem]?.add(it) ?: mapa.put(it.arrivedToSystem, Group(it))
+        }
+        if (queue.isNotEmpty()) {
+            val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
+            val groups : Queue<Group> = LinkedList(groupx)
+            val group = groups.peek()
+            if (group.size() <= minibus.freeSeats()) {
+                group.everyone().forEach { queue.remove(it) }
+                requestLoading(msg, group)
+            }
+        }
+      //else {
+      //    msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
+      //}
     }
 
     /** @see CustomerServiceScheduler **/
@@ -127,7 +137,6 @@ class AirCarRentalManager(
         .withCode(mc.moveCustomerToQueueAtAirCarRental)
         .toAgentsAssistant(myAgent(), id.AirCarRentalMoveCustomerToQueueAction)
         .let { execute(it) }
-
 
     private fun goToNextStop(msg: MessageForm) = msg
         .createCopy()

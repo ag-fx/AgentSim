@@ -1,6 +1,7 @@
 package newsstand.components.entity
 
 data class Employee(val id: Int, var serving: Customer? = null, var isBusy: Boolean = false) {
+
     fun isNotBusy() = !isBusy
 
     fun serveCustomer(customer: Customer) {
@@ -10,6 +11,10 @@ data class Employee(val id: Int, var serving: Customer? = null, var isBusy: Bool
     fun done(){
         serving = null
         isBusy = false
+    }
+
+    fun reset(){
+        done()
     }
 }
 

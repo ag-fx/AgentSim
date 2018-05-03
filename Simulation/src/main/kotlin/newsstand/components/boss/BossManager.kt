@@ -8,6 +8,7 @@ import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.constants.id
+import newsstand.constants.mc
 import newsstand.constants.mc.init
 
 class BossManager(
@@ -17,27 +18,53 @@ class BossManager(
 
     override fun processMessage(message: MessageForm) = when (message.code()) {
 
-        finish -> {
-            val toSurrounding = message
-                .createCopy()
-                .toAgent(id.SurroundingAgent)
-                .withCode(init)
+        finish -> when (message.sender()) {
 
-            val toMinibus = message
-                .createCopy()
-                .toAgent(id.MinibusAgentID)
-                .withCode(init)
+            is AfterWarmUpScheduler -> {
+           //     mySim().setSimSpeed(50.0, 2.0)
+                listOf(id.TerminalAgentID, id.AirCarRentalAgentID)
+                    .forEach {
+                        message
+                            .createCopy()
+                            .withCode(mc.clearLengthStat)
+                            .toAgent(it)
+                            .let { notice(it) }
+                    }
+            }
+            is TestSchedler -> {
 
-            listOf(toSurrounding, toMinibus).forEach {
-                notice(it)
+                val toSurrounding = message
+                    .createCopy()
+                    .toAgent(id.SurroundingAgent)
+                    .withCode(init)
+
+                val toMinibus = message
+                    .createCopy()
+                    .toAgent(id.MinibusAgentID)
+                    .withCode(init)
+
+                listOf(toSurrounding, toMinibus).forEach {
+                    notice(it)
+                }
+            }
+
+            else -> {
             }
         }
 
-        init -> message
-            .createCopy()
-            .convert()
-            .toAgentsAssistant(myAgent(),-10)
-            .let { startContinualAssistant(it) }
+        init -> {
+            message
+                .createCopy()
+                .convert()
+                .toAgentsAssistant(myAgent(), -10) // delay
+                .let { startContinualAssistant(it) }
+
+            message
+                .createCopy()
+                .convert()
+                .toAgentsAssistant(myAgent(), -11) // warmupmessage
+                .let { startContinualAssistant(it) }
+        }
 
 
         else -> throw WrongMessageCode(message)

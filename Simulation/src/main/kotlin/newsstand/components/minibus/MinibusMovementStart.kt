@@ -36,7 +36,7 @@ class MinibusMovementStart(
                 it.minibus!!.apply {
                     isInDestination = true
                     source = Building.TerminalOne
-                    destination = source.nextStop()
+                    destination = source.nextStop(this)
                 }
                 log("Minibus arrived T1 @ ${mySim().currentTime()}")
 

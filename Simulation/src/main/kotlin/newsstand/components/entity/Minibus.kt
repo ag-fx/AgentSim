@@ -1,6 +1,10 @@
 package newsstand.components.entity
 
 import OSPDataStruct.SimQueue
+import newsstand.BusType
+import newsstand.clearStat
+import newsstand.constants.Clearable
+import newsstand.constants.const
 
 data class Minibus(
     val id: Int,
@@ -8,14 +12,32 @@ data class Minibus(
     var destination: Building,
     var leftAt: Double,
     val averageSpeed: Double = 35000.0 / 3600.0,
-    val capacity: Int = 12,
+    val type : BusType,
     var isInDestination: Boolean = false,
     val queue: SimQueue<Group> = SimQueue()
-) {
-    fun secondsToDestination() = source.secondsToNext(averageSpeed)
-    fun isNotFull() = queue.size < capacity
+) : Clearable {
+    fun secondsToDestination() = source.secondsToNext(this)
+
+    val capacity
+        get() = when (type) {
+            BusType.A -> 12
+            BusType.B -> 18
+            BusType.C -> 30
+        }
+
+    override fun clear() {
+        source          = Building.AirCarRental
+        destination     = Building.TerminalOne
+        leftAt          = .0//const.StartTime
+        isInDestination = false
+        queue.clearStat()
+    }
+
     fun isNotEmpty() = queue.isNotEmpty()
+
     fun freeSeats() = capacity - queue.size
+
+    fun containsCustomersFromAcr() = queue.map { it.leader.building }.any { it == Building.AirCarRental }
 
     fun distanceFromSource(currentSimTime: Double): Double {
         return if (!isInDestination)
@@ -25,7 +47,7 @@ data class Minibus(
 
     fun distanceFromDestination(currentSimTime: Double) :Double {
         return if(!isInDestination)
-            source.distanceToNext() - distanceFromSource(currentSimTime)
+            source.distanceToNext(this) - distanceFromSource(currentSimTime)
         else 0.0
     }
 }

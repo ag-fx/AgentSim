@@ -31,13 +31,22 @@ class SurroundingManager(
             }
 
         finish -> when (message.sender()) {
-            is TerminalOneCustomerArrivalScheduler  -> message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalOne)
-            is TerminalTwoCustomerArrivalScheduler  -> message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalTwo)
-            is AirCarRentalCustomerArrivalScheduler -> message.notifyCustomerArrival(id.AirCarRentalAgentID, mc.customerArrivalTerminalAcr)
+            is TerminalOneCustomerArrivalScheduler  -> {
+                myAgent().groupsT1.inc()
+                message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalOne)
+            }
+            is TerminalTwoCustomerArrivalScheduler  -> {
+                myAgent().groupsT2.inc()
+                message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalTwo)
+            }
+            is AirCarRentalCustomerArrivalScheduler -> {
+                myAgent().groupsAcr.inc()
+                message.notifyCustomerArrival(id.AirCarRentalAgentID, mc.customerArrivalTerminalAcr)
+            }
             else -> throw IllegalStateException("Wrong finish sender")
         }
 
-        mc.customerLeaving -> customerLeaving(message)
+        mc.customerLeaving -> customerLeaving(message.createCopy())
 
         else -> throw WrongMessageCode(message)
     }

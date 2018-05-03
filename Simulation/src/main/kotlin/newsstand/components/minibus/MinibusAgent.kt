@@ -3,8 +3,11 @@ package newsstand.components.minibus
 import OSPABA.Agent
 import OSPABA.Simulation
 import abaextensions.addOwnMessages
+import newsstand.Config
 import newsstand.components.entity.Building
 import newsstand.components.entity.Minibus
+import newsstand.constants.Clearable
+import newsstand.constants.const
 import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
@@ -12,17 +15,19 @@ import newsstand.constants.mc.init
 class MinibusAgent(
     mySim: Simulation,
     parent: Agent,
-    minibuses: Int
-) : Agent(id.MinibusAgentID, mySim, parent) {
+    conf: Config
+) : Agent(id.MinibusAgentID, mySim, parent), Clearable {
 
-    val minibuses = List(minibuses) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0) }
+    val minibuses = List(conf.minibuses) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0,type = conf.bustype) }
 
     init {
+
         MinibusManager(mySim, this)
         MinibusMovementStart(mySim, this)
         MinibusMovement(mySim, this)
         ExitFromMinibusScheduler(mySim, this)
         EnterToMinibusMinibusScheduler(mySim, this)
+
         addOwnMessages(
             init,
             mc.minibusGoTo,
@@ -30,9 +35,14 @@ class MinibusAgent(
             mc.getCustomerFromBusRequest,
             mc.customerExitedMinibus,
             mc.customerEnteredMinibus,
-            mc.enterMinibusRequest
+            mc.enterMinibusRequest,
+            mc.getCustomerFromBusResponse
 
         )
+    }
+
+    override fun clear() {
+        minibuses.forEach(Minibus::clear)
     }
 
 }
