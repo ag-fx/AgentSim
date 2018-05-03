@@ -22,9 +22,9 @@ val initState = SimState(
     queueT1 = SimQueue(),
     queueT2 = SimQueue(),
     queueAcr = SimQueue(),
+    queueAcrToT3 = SimQueue(),
     acrEmployees = emptyList(),
     minibuses = emptyList()
-
 )
 
 val format = DecimalFormat("#.##")

@@ -40,7 +40,7 @@ class MyController : Controller() {
                 sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
                 sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
                 sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
-                sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
+                sim.getState().queueAcr.map { it.leader }.map(::CustomerModel).let(carRentalQueue::setAll)
                 sim.getState().queueAcrToT3.map(::CustomerModel).let(carRentalQueueToT3::setAll)
                 simTime.set(sim.currentTime())
             } catch (e: Throwable) {

@@ -14,7 +14,6 @@ class MoveCustomerToQueueAction(
     override fun execute(msg: MessageForm) = msg
         .convert()
         .let {
-
             when (it.group!!.building()) {
                 Building.TerminalOne,
                 Building.TerminalTwo -> myAgent().queue.push(it.group!!)

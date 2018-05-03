@@ -15,7 +15,7 @@ import newsstand.constants.const
 
 data class Config(
     val minibuses: Int = 2,
-    val employees: Int = 2,
+    val employees: Int = 1,
     val bustype: BusType = BusType.A
 )
 
@@ -73,7 +73,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         queueT2 = terminal.terminalTwo.queue,
         timeStatQueueT1 = terminal.terminalOne.timeInQueue,
         timeStatQueueT2 = terminal.terminalTwo.timeInQueue,
-        queueAcr        = airCarRentalAgent.queue.map { it.leader }.toSimQueue(),
+        queueAcr        = airCarRentalAgent.queue,
         queueAcrToT3 = airCarRentalAgent.queueToTerminal3,
         acrEmployees = airCarRentalAgent.employees,
         minibuses = minibus.minibuses

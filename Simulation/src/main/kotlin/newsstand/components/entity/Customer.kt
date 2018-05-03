@@ -17,3 +17,4 @@ data class Group(
     fun arrivedToSystem() = leader.arrivedToSystem
     fun building() = leader.building
 }
+
