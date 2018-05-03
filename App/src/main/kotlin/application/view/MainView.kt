@@ -18,7 +18,7 @@ class MainView : View("Hello TornadoFX") {
             hbox {
                 addClass("menu-bar")
                 spacing = 10.0
-                button("Run") { action { controller.run() } }
+                button("Run")           { action { controller.run() } }
                 button("Full speed") { action { controller.fullSpeed() } }
                 button("Slow speed") { action { controller.setSimSpeed() } }
                 button("PAUSE") { action { controller.pause() } }

@@ -2,10 +2,12 @@ package newsstand.components.rental
 
 import OSPABA.*
 import OSPABA.IdList.start
+import OSPRNG.TriangularRNG
 import OSPRNG.UniformContinuousRNG
 import abaextensions.WrongMessageCode
 import abaextensions.withCode
 import newsstand.components.convert
+import newsstand.components.entity.Building
 import newsstand.constants.id
 import newsstand.constants.mc
 
@@ -18,7 +20,7 @@ class CustomerServiceScheduler(
         start -> msg
             .createCopy()
             .withCode(mc.customerServed)
-            .let { hold(rndServiceTime.sample(), it) }
+            .let { hold(it.serviceTime(), it) }
 
         mc.customerServed -> msg
             .createCopy()
@@ -33,6 +35,29 @@ class CustomerServiceScheduler(
         else -> throw WrongMessageCode(msg)
     }
 
-    private val rndServiceTime = UniformContinuousRNG((6 * 60.0) - (4 * 60), (6.0 * 60) + (4 * 60))
+    //region generators for service
+    private fun MessageForm.serviceTime() = if (this.convert().group!!.leader.building == Building.AirCarRental) rndOut() else rndIn()
+
+    private fun rndOut() =
+        if (rndProbabilityOut.sample() < 0.4)
+            rndOutSmaller.sample()
+        else
+            rndOutBigger.sample()
+
+    private fun rndIn() =
+        if (rndProbabilityIn.sample() < 0.4)
+            rndInSmaller.sample()
+        else
+            rndInBigger.sample()
+
+    private val rndProbabilityIn = UniformContinuousRNG(0.0, 1.0)
+    private val rndInSmaller     = TriangularRNG(1.47, 2.06, 3.0)
+    private val rndInBigger      = TriangularRNG(3.0, 4.63, 5.31)
+
+    private val rndProbabilityOut = UniformContinuousRNG(0.0, 1.0)
+    private val rndOutSmaller     = TriangularRNG(0.99, 1.15, 2.21)
+    private val rndOutBigger      = TriangularRNG(2.9, 4.3, 4.8)
+    //endregion
+
     override fun myAgent() = super.myAgent() as AirCarRentalAgent
 }

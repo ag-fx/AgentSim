@@ -43,7 +43,7 @@ class MyController : Controller() {
                 sim.getState().queueAcr.map(::CustomerModel).let(carRentalQueue::setAll)
                 sim.getState().queueAcrToT3.map(::CustomerModel).let(carRentalQueueToT3::setAll)
                 simTime.set(sim.currentTime())
-            }  catch (e: Throwable) {
+            } catch (e: Throwable) {
 
             }
         }
