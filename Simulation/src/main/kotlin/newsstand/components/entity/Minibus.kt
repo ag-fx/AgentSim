@@ -1,10 +1,8 @@
 package newsstand.components.entity
 
 import OSPDataStruct.SimQueue
-import newsstand.BusType
 import newsstand.clearStat
 import newsstand.constants.Clearable
-import newsstand.constants.const
 
 data class Minibus(
     val id: Int,
@@ -53,3 +51,5 @@ data class Minibus(
     }
 }
 
+
+enum class BusType { A, B, C }

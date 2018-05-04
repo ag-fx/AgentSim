@@ -10,6 +10,7 @@ import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
+import newsstand.components.entity.Building
 import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
@@ -58,8 +59,15 @@ class SurroundingManager(
         .let { notice(it) }
 
     private fun customerLeaving(msg: MessageForm) = msg.createCopy().convert().let {
-        val customer = it.group!!
-        myAgent().timeInSystem.addSample(mySim().currentTime() - customer.arrivedToSystem())
+        val group = it.group!!
+
+        myAgent().timeInSystemTotal.addSample(mySim().currentTime() - group.arrivedToSystem())
+        when(group.building()){
+            Building.TerminalOne,
+            Building.TerminalTwo   -> myAgent().timeInSystemIncoming.addSample(mySim().currentTime() - group.arrivedToSystem())
+            Building.TerminalThree -> throw IllegalStateException("Should not happen")
+            Building.AirCarRental  -> myAgent().timeInSystemLeaving.addSample(mySim().currentTime() - group.arrivedToSystem())
+        }
     }
 
     override fun myAgent() = super.myAgent() as SurroundingAgent

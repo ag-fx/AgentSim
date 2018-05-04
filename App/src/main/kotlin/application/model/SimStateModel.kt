@@ -1,6 +1,7 @@
 package application.model
 
 import OSPDataStruct.SimQueue
+import OSPStat.Stat
 import javafx.util.StringConverter
 import newsstand.SimState
 import newsstand.constants.const
@@ -18,14 +19,19 @@ class SimStateModel(sim: SimState = initState) : ItemViewModel<SimState>(sim) {
 }
 
 
-
 val initState = SimState(
     queueT1 = SimQueue(),
     queueT2 = SimQueue(),
     queueAcr = SimQueue(),
     queueAcrToT3 = SimQueue(),
     acrEmployees = emptyList(),
-    minibuses = emptyList()
+    minibuses = emptyList(),
+    timeInSystemIncoming = Stat(),
+    timeInSystemLeaving = Stat(),
+    timeStatQueueT1 = Stat(),
+    timeStatQueueT2 = Stat(),
+    timeStatQueueAcr = Stat(),
+    timeStatQueueAcrToT3 = Stat()
 )
 
 val format = DecimalFormat("#.##")
@@ -74,7 +80,7 @@ class MyTime {
     var actualTime: Double = 0.0
         set(value) {
             field = value
-            calculateTime(value + const.FirstKnownInterval - const.WarmUpTime )
+            calculateTime(value + const.FirstKnownInterval - const.WarmUpTime)
         }
 
     private var d: Int = 0
@@ -105,7 +111,7 @@ class MyTime {
 }
 
 fun main(args: Array<String>) {
-    val x = MyTime().apply { actualTime = const.FirstKnownInterval - const.WarmUpTime    }
+    val x = MyTime().apply { actualTime = const.FirstKnownInterval - const.WarmUpTime }
     println(x.toString())
 
 }

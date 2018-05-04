@@ -1,7 +1,6 @@
 package newsstand.components.surrounding
 
 import OSPABA.Agent
-import OSPABA.ContinualAssistant
 import OSPABA.Simulation
 import OSPStat.Stat
 import abaextensions.addOwnMessages
@@ -28,7 +27,10 @@ class SurroundingAgent(
     parent: Agent
 ) : Agent(id.SurroundingAgent, mySim, parent), Clearable {
 
-    val timeInSystem = Stat()
+    val timeInSystemIncoming = Stat()
+    val timeInSystemLeaving  = Stat()
+    val timeInSystemTotal    = Stat()
+
     val groupsT1  = Counter()
     val groupsT2  = Counter()
     val groupsAcr = Counter()
@@ -46,7 +48,9 @@ class SurroundingAgent(
     }
 
     override fun clear() {
-        timeInSystem.clear()
+        timeInSystemIncoming.clear()
+        timeInSystemLeaving .clear()
+        timeInSystemTotal .clear()
         listOf(groupsAcr,groupsT1,groupsT2).forEach(Counter::clear)
     }
 }

@@ -101,8 +101,9 @@ class AirCarRentalManager(
     private fun serviceFinished(msg: MessageForm) {
         when (msg.convert().group!!.building()) {
             Building.TerminalOne,
-            Building.TerminalTwo  -> customerLeavesWithCar(msg)
-            Building.AirCarRental -> moveCustomerToQueue(msg)
+            Building.TerminalTwo   -> customerLeavesWithCar(msg)
+            Building.AirCarRental  -> moveCustomerToQueue(msg)
+            Building.TerminalThree -> throw IllegalStateException("No service should finish at terminal 3")
         }
         val msg = msg.createCopy()
         msg.convert().group = null

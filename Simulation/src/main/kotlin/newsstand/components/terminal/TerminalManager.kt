@@ -49,7 +49,6 @@ class TerminalManager(
         }
     }
 
-
     private fun requestPeopleFromMinibus(msg: MessageForm) = msg
         .createCopy()
         .withCode(mc.getCustomerFromBusRequest)
@@ -70,21 +69,23 @@ class TerminalManager(
         }
     }
 
-    private fun handleBusOnTerminal(terminal: Terminal, msg: MessageForm) {
+    private fun getGroupedQueue(terminal: Terminal): Queue<Group> {
         val queue = terminal.queue
-        val minibus = msg.createCopy().convert().minibus!!
-        val mapa = mutableMapOf<Double, Group>()
+        val arrivalMap = mutableMapOf<Double, Group>()
         queue.forEach {
-            mapa[it.arrivedToSystem]?.add(it) ?: mapa.put(it.arrivedToSystem, Group(it))
+            arrivalMap[it.arrivedToSystem]?.add(it) ?: arrivalMap.put(it.arrivedToSystem, Group(it))
         }
+        return LinkedList(arrivalMap.map { it.value })
+    }
 
+    private fun handleBusOnTerminal(terminal: Terminal, msg: MessageForm) {
+        val minibus = msg.convert().minibus!!
         if (terminal.queue.isNotEmpty()) {
-            val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
-            val groups: Queue<Group> = LinkedList(groupx)
+            val groups = getGroupedQueue(terminal)
             val group = groups.peek()
             if (group.size() <= minibus.freeSeats()) {
-                group.everyone().forEach { queue.remove(it) }
-                terminal.timeInQueue.addSample(mySim().currentTime() - group.startWaitingTimeTerminal)
+                group.everyone().forEach { terminal.queue.remove(it) }
+                terminal.timeInQueueStat.addSample(mySim().currentTime() - group.startWaitingTimeTerminal)
                 requestLoading(msg, group, terminal)
             }
         } else {
@@ -105,8 +106,10 @@ class TerminalManager(
         .let { request(it) }
 
     /** @see AddToTerminalQueueAction **/
-    private fun addGroupToQueue(msg: MessageForm) {
-        msg.convert().group!!.everyone().forEach {
+    private fun addGroupToQueue(msg: MessageForm) = msg
+        .convert().group!!
+        .everyone()
+        .forEach {
             msg
                 .createCopy()
                 .convert()
@@ -114,7 +117,7 @@ class TerminalManager(
                 .toAgentsAssistant(myAgent(), id.AddToTerminalQueueAction)
                 .let { execute(it) }
         }
-    }
+
 
     override fun myAgent() = super.myAgent() as TerminalAgent
 }

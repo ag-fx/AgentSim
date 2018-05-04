@@ -20,7 +20,11 @@ class CustomerServiceScheduler(
         start -> msg
             .createCopy()
             .withCode(mc.customerServed)
-            .let { hold(it.serviceTime(), it) }
+            .convert()
+            .let {
+                myAgent().queueStat.addSample(mySim().currentTime() - it.group!!.startWaitingTimeCarRental)
+                hold(it.serviceTime(), it)
+            }
 
         mc.customerServed -> msg
             .createCopy()
@@ -51,12 +55,12 @@ class CustomerServiceScheduler(
             rndInBigger.sample()
 
     private val rndProbabilityIn = UniformContinuousRNG(0.0, 1.0)
-    private val rndInSmaller     = TriangularRNG(1.47*60, 2.06*60, 3.0*60)
-    private val rndInBigger      = TriangularRNG(3.0*60, 4.63*60, 5.31*60)
+    private val rndInSmaller = TriangularRNG(1.47 * 60, 2.06 * 60, 3.0 * 60)
+    private val rndInBigger = TriangularRNG(3.0 * 60, 4.63 * 60, 5.31 * 60)
 
     private val rndProbabilityOut = UniformContinuousRNG(0.0, 1.0)
-    private val rndOutSmaller     = TriangularRNG(0.99*60, 1.15*60, 2.21*60)
-    private val rndOutBigger      = TriangularRNG(2.9*60, 4.3*60, 4.8*60)
+    private val rndOutSmaller = TriangularRNG(0.99 * 60, 1.15 * 60, 2.21 * 60)
+    private val rndOutBigger = TriangularRNG(2.9 * 60, 4.3 * 60, 4.8 * 60)
     //endregion
 
     override fun myAgent() = super.myAgent() as AirCarRentalAgent

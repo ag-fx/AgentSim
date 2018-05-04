@@ -18,17 +18,18 @@ class MoveCustomerToQueueAction(
                 Building.TerminalOne,
                 Building.TerminalTwo -> {
                     myAgent().queue.push(it.group!!)
-                 }
+                }
                 Building.AirCarRental -> {
-
-                    if (it.group!!.arrivedToSystem() != mySim().currentTime())
-                        it.group!!.everyone().toList().forEach(myAgent().queueToTerminal3::push)
-                    else {
+                    if (it.group!!.arrivedToSystem() != mySim().currentTime()) {
+                        it.group!!.startWaitingTimeCarRentalToT3 = mySim().currentTime()
+                        it.group!!.everyone().forEach(myAgent().queueToTerminal3::push)
+                    } else {
+                        it.group!!.startWaitingTimeCarRental = mySim().currentTime()
                         myAgent().totalCustomers += it.group!!.size()
                         myAgent().queue.push(it.group!!)
                     }
                 }
-
+                Building.TerminalThree -> throw IllegalStateException("No queue at terminal three")
             }
         }
 
