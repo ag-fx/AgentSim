@@ -84,6 +84,7 @@ class TerminalManager(
             val group = groups.peek()
             if (group.size() <= minibus.freeSeats()) {
                 group.everyone().forEach { queue.remove(it) }
+                terminal.timeInQueue.addSample(mySim().currentTime() - group.startWaitingTimeTerminal)
                 requestLoading(msg, group, terminal)
             }
         } else {
@@ -109,9 +110,7 @@ class TerminalManager(
             msg
                 .createCopy()
                 .convert()
-                .apply {
-                    oneCustomer = it
-                }
+                .apply { oneCustomer = it }
                 .toAgentsAssistant(myAgent(), id.AddToTerminalQueueAction)
                 .let { execute(it) }
         }

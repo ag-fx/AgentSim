@@ -11,9 +11,10 @@ import java.text.DecimalFormat
 class SimStateModel(sim: SimState = initState) : ItemViewModel<SimState>(sim) {
     val queueT1 = sim.queueT1.lengthStatistic()
     val statQueueT1 = sim.timeStatQueueT1
-    val statQueueT2 = sim.timeStatQueueT2
     val queueT2 = sim.queueT2.lengthStatistic()
+    val statQueueT2 = sim.timeStatQueueT2
     val queueAcr = sim.queueAcr.lengthStatistic()
+
 }
 
 

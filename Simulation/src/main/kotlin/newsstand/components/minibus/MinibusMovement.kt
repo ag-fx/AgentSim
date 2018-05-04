@@ -11,6 +11,7 @@ import abaextensions.log
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.distanceToNext
 import newsstand.components.entity.nextStop
 import newsstand.components.entity.secondsToNext
 import newsstand.constants.id
@@ -42,6 +43,7 @@ class MinibusMovement(
         mc.minibusArrivedToDestination -> {
             val msg = msg.convert().createCopy()
             msg.minibus!!.apply {
+                kilometers+= source.distanceToNext(this)
                 isInDestination = true
                 source = destination
                 destination = destination.nextStop(this)

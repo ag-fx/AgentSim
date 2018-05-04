@@ -23,7 +23,7 @@ class AddToTerminalQueueAction(
                 mc.customerArrivalTerminalTwo ->{
                    myAgent().terminalTwo.queue.push(it.oneCustomer!!)
                    myAgent().terminalTwo.totalCustomers++
-                    Unit
+                   Unit
                 }
                 else -> {}
             }

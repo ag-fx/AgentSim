@@ -82,14 +82,16 @@ abstract class CustomerArrivalScheduler(
 
     protected abstract val means: List<Double>
 
-    protected val generators by lazy { means.map { ExponentialRNG(3600.0 / it) } }
+    private val generators by lazy { means.map { ExponentialRNG(3600.0 / it) } }
 
-    protected val intervalGap = 60 * 15.0
+    private val intervalGap = 60 * 15.0
 
     private fun createGroup() =
         Group(
             leader =                     Customer(mySim().currentTime(), terminal),
-            family = List(groupSize()) { Customer(mySim().currentTime(), terminal) }.toMutableList()
+            family = List(groupSize()) { Customer(mySim().currentTime(), terminal) }.toMutableList(),
+            startWaitingTimeTerminal  = if(terminal!=Building.AirCarRental) mySim().currentTime() else 0.0,
+            startWaitingTimeCarRental = if(terminal==Building.AirCarRental) mySim().currentTime() else 0.0
         )
 
     private fun groupSize(): Int {

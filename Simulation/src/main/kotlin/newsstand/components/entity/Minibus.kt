@@ -14,7 +14,8 @@ data class Minibus(
     val averageSpeed: Double = 35000.0 / 3600.0,
     val type : BusType,
     var isInDestination: Boolean = false,
-    val queue: SimQueue<Group> = SimQueue()
+    val queue: SimQueue<Group> = SimQueue(),
+    var kilometers : Double = .0
 ) : Clearable {
     fun secondsToDestination() = source.secondsToNext(this)
 

@@ -2,13 +2,8 @@ package newsstand.components.surrounding
 
 import OSPABA.Agent
 import OSPABA.Simulation
-import newsstand.components.Message
 import newsstand.components.entity.Building
-import newsstand.constants.const
 import newsstand.constants.id
-import com.sun.javaws.Globals
-import kotlin.math.roundToInt
-
 
 class TerminalOneCustomerArrivalScheduler(
     mySim: Simulation,

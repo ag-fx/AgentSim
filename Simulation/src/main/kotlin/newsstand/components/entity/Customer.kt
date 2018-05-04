@@ -8,11 +8,15 @@ data class Customer(
 }
 
 data class Group(
-    val leader : Customer,
-    val family : MutableList<Customer> = mutableListOf()
-){
+    val leader: Customer,
+    val family: MutableList<Customer> = mutableListOf(),
+    var startWaitingTimeTerminal : Double = .0,
+    var startWaitingTimeCarRental : Double = .0,
+    var startWaitingTimeCarRentalToT3 : Double = .0
+
+) {
     fun add(customer: Customer) = family.add(customer)
-    fun everyone() = listOf(listOf(leader),family).flatten().toMutableList()
+    fun everyone() = listOf(listOf(leader), family).flatten().toMutableList()
     fun size() = everyone().size
     fun arrivedToSystem() = leader.arrivedToSystem
     fun building() = leader.building

@@ -16,7 +16,9 @@ class MoveCustomerToQueueAction(
         .let {
             when (it.group!!.building()) {
                 Building.TerminalOne,
-                Building.TerminalTwo -> myAgent().queue.push(it.group!!)
+                Building.TerminalTwo -> {
+                    myAgent().queue.push(it.group!!)
+                 }
                 Building.AirCarRental -> {
 
                     if (it.group!!.arrivedToSystem() != mySim().currentTime())

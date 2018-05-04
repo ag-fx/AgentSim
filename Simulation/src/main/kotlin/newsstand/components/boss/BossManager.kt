@@ -21,7 +21,7 @@ class BossManager(
         finish -> when (message.sender()) {
 
             is AfterWarmUpScheduler -> {
-                mySim().setSimSpeed(50.0, 2.0)
+                mySim().setSimSpeed(1.0, 1.0)
                 listOf(id.TerminalAgentID, id.AirCarRentalAgentID)
                     .forEach {
                         message

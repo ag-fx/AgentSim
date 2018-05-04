@@ -12,9 +12,6 @@ import tornadofx.setValue
 
 class MyController : Controller() {
 
-    val intervalProperty = SimpleDoubleProperty(20.0)
-    var interval by intervalProperty
-
     val durationProperty = SimpleDoubleProperty(2.0)
     var duration by durationProperty
 
@@ -52,7 +49,7 @@ class MyController : Controller() {
     }
 
     fun setSimSpeed() {
-        sim.setSimSpeed(interval, duration)
+        sim.setSimSpeed(1.0, duration)
     }
 
     fun fullSpeed() {

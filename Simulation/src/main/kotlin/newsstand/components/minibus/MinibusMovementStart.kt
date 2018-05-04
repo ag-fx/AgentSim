@@ -9,6 +9,7 @@ import abaextensions.log
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.distanceToNext
 import newsstand.components.entity.nextStop
 import newsstand.constants.id
 import newsstand.constants.mc
@@ -35,6 +36,7 @@ class MinibusMovementStart(
             .let {
                 it.minibus!!.apply {
                     isInDestination = true
+                    kilometers += source.distanceToNext(this)
                     source = Building.TerminalOne
                     destination = source.nextStop(this)
                 }

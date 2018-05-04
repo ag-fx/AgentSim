@@ -28,7 +28,7 @@ class CustomerServiceScheduler(
             .let {
                 val customer = it.group!!.leader
                 val employee = myAgent().employees.first { it.serving == customer }
-                employee.done()
+                employee.done(mySim())
                 assistantFinished(it)
             }
 

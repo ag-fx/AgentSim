@@ -11,12 +11,12 @@ import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
 import newsstand.components.entity.Group
-import newsstand.components.entity.Terminal
 import newsstand.components.entity.isOneFree
 import newsstand.constants.id
 import newsstand.constants.mc
 import java.util.*
 
+// TODO add statistics for waiting times to every queue
 class AirCarRentalManager(
     mySim: Simulation,
     myAgent: Agent
@@ -92,7 +92,7 @@ class AirCarRentalManager(
             val employee = myAgent().employees.first { it.isNotBusy() }
             val group = myAgent().queue.pop()
             val customer = group.leader
-            employee.serveCustomer(customer)
+            employee.serveCustomer(customer,mySim())
             msg.convert().group = group
             serveCustomer(msg)
         }

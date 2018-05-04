@@ -29,8 +29,8 @@ class SurroundingAgent(
 ) : Agent(id.SurroundingAgent, mySim, parent), Clearable {
 
     val timeInSystem = Stat()
-    val groupsT1 =  Counter()
-    val groupsT2 =  Counter()
+    val groupsT1  = Counter()
+    val groupsT2  = Counter()
     val groupsAcr = Counter()
 
     init {

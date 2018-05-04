@@ -12,7 +12,9 @@ data class SimState(
     val acrEmployees: List<Employee>,
     val minibuses: List<Minibus>,
     val timeStatQueueT1: Stat = Stat(),
-    val timeStatQueueT2: Stat = Stat()
+    val timeStatQueueT2: Stat = Stat(),
+    val timeStatQueueAcr: Stat = Stat(),
+    val timeStatQueueAcrToT3: Stat = Stat()
 )
 
 

@@ -17,7 +17,6 @@ abstract class Terminal(val building: Building, val sim: Simulation? = null) : C
         queue.clearStat()
         timeInQueue.clear()
         totalCustomers = 0
-
     }
 
 }
