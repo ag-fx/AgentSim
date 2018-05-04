@@ -6,6 +6,7 @@ import abaextensions.WrongMessageCode
 import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
+import newsstand.Config
 import newsstand.components.convert
 import newsstand.constants.id
 import newsstand.constants.mc
@@ -13,7 +14,8 @@ import newsstand.constants.mc.init
 
 class BossManager(
     mySim: Simulation,
-    myAgent: Agent
+    myAgent: Agent,
+    val config: Config
 ) : Manager(id.BossManager, mySim, myAgent) {
 
     override fun processMessage(message: MessageForm) = when (message.code()) {
@@ -21,7 +23,8 @@ class BossManager(
         finish -> when (message.sender()) {
 
             is AfterWarmUpScheduler -> {
-             //   mySim().setSimSpeed(1.0, 1.0)
+                if(config.slowDownAfterWarmUp)
+                    mySim().setSimSpeed(1.0, 1.0)
                 listOf(id.TerminalAgentID, id.AirCarRentalAgentID)
                     .forEach {
                         message

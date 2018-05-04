@@ -2,11 +2,12 @@ package application.view
 
 import application.controller.MyController
 import application.model.*
+import javafx.geometry.Insets
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable
 
-class MainView : View("Hello TornadoFX") {
+class MainView : View("AirCarRental") {
 
     private val controller: MyController by inject()
 
@@ -18,17 +19,18 @@ class MainView : View("Hello TornadoFX") {
             hbox {
                 addClass("menu-bar")
                 spacing = 10.0
-                button("Run")        { action { controller.run() } }
+                button("Run") { action { controller.run() } }
                 button("Full speed") { action { controller.fullSpeed() } }
                 button("Slow speed") { action { controller.setSimSpeed() } }
-                button("PAUSE")      { action { controller.pause() } }
-                button("RESUME")     { action { controller.resume() } }
-                textfield(controller.simTime,converter = NumberTimeConv())
+                button("PAUSE") { action { controller.pause() } }
+                button("RESUME") { action { controller.resume() } }
+                textfield(controller.simTime, converter = NumberTimeConv())
             }
         }
         center = tabpane {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
 
+            tab(Config::class)
             tab(MinibusesView::class)
             tab(TerminalView::class)
             tab(CarRentalView::class)

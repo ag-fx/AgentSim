@@ -21,7 +21,6 @@ abstract class CustomerArrivalScheduler(
     val terminal: Building,
     simID: Int
 ) : Scheduler(simID, mySim, parent) {
-    var i = 0
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
@@ -52,6 +51,8 @@ abstract class CustomerArrivalScheduler(
         msg.group = createGroup()
     }
 
+    // does it work? yes. do I know why? no.
+    // ¯\_(ツ)_/¯
     private fun timeBetweenArrivals(): Double {
         val generated: Double
         var interval = 0
