@@ -1,3 +1,3 @@
-Samle TornadoFX starter application with enabled coroutines :) 
+agent based simulation in kotlin with tornadofx
 
-run with gradle :)
+school project.
