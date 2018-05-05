@@ -86,7 +86,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
 
     fun start(simEndTime: Double = 4.5 * 3600) {
         maxSimTime = simEndTime + const.WarmUpTime
-        simulate(config.replicationCount, maxSimTime  * 2)
+        simulate(config.replicationCount, maxSimTime  * 2.0)
     }
 
 
