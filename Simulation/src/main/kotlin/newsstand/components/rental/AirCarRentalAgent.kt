@@ -20,12 +20,15 @@ class AirCarRentalAgent(
     employees: Int
 ) : Agent(id.AirCarRentalAgentID, mySim, parent), Clearable {
 
+
     var totalCustomers       = 0
     val queue                = SimQueue<Group>   (WStat(mySim))
     val queueStat            = Stat()
     val queueToTerminal3     = SimQueue<Customer>(WStat(mySim))
     val queueToTerminal3Stat = Stat()
-    val employees            = List(employees) { Employee(it) }.onEach { it.setStat(mySim) }
+    val employees: List<Employee> = List(employees) { Employee(it) }.onEach { it.setStat(mySim) }
+
+
 
     init {
         AirCarRentalManager(mySim, this)
@@ -41,9 +44,13 @@ class AirCarRentalAgent(
         )
     }
 
+
+
     override fun clear(){
         queue.clearStat()
         queueToTerminal3.clearStat()
+        queueToTerminal3Stat.clear()
+        queueStat.clear()
         employees.forEach(Employee::clear)
     }
 

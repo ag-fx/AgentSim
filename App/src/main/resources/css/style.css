@@ -32,6 +32,10 @@
  * Root					 				                       				   *
  *                                                                             *
  ******************************************************************************/
+.table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
 .root {
     /* Swatch Colors - Blue*/
     -swatch-100: #BBDEFB;

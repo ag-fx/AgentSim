@@ -35,12 +35,14 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     val acrQueueLength = Result("")
 
     val employeeOccupancy = Result("Vyťaženosť obsluhujúceho")
-    val busOccupancy = Result("Vyťaženosť autobusov")
-    //TODO Čas čakania prichádzajúcich
-    //TODO Čas čakania odchádzajúcich
+
+    val busOccupancy    = Result("Vyťaženosť autobusov")
+    val busKiloneters   = Result("Počet najazdených km")
+    val priceKilometers = Result("Cena za najazdene km")
+    val priceBusDriver  = Result("Cena prace soferov")
+    val priceService    = Result("Cena prace obsluhujúci")
+
     //TODO Trvanie jednej prevádzky
-    //TODO Počet najazdených km
-    //TODO Náklady vodiči
     //TODO Náklady obsluhujúci
     //TODO Náklady celkové
 
@@ -62,16 +64,19 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         repState.timeInSystemLeaving.mean().let(timeInSystemLeaving::addSample)
         repState.timeInSystemTotal.mean().let(timeInSystemTotal::addSample)
         repState.queueT1.mean().let { queueT1.addSample(it) }
-        repState.timeStatQueueT1.mean().let { timeStatQueueT1.addSample(it) }
+        repState.timeStatQueueT1.mean().let { timeStatQueueT1.addSample(it/60) }
         repState.queueT2.mean().let { queueT2.addSample(it) }
-        repState.timeStatQueueT2.mean().let { timeStatQueueT2.addSample(it) }
+        repState.timeStatQueueT2.mean().let { timeStatQueueT2.addSample(it/60) }
         repState.queueAcr.mean().let { queueAcr.addSample(it) }
-        repState.timeStatQueueAcr.mean().let { timeStatQueueAcr.addSample(it) }
+        repState.timeStatQueueAcr.mean().let { timeStatQueueAcr.addSample(it/60) }
         repState.queueAcrToT3.mean().let { queueAcrToT3.addSample(it) }
-        repState.timeStatQueueAcrToT3.mean().let { timeStatQueueAcrToT3.addSample(it) }
+        repState.timeStatQueueAcrToT3.mean().let { timeStatQueueAcrToT3.addSample(it/60) }
         repState.employeeOccupancy.let { employeeOccupancy.addSample(it) }
         repState.busOccupancy.let { busOccupancy.addSample(it) }
-
+        minibus.minibuses.map { it.meters / 1000 }.sum().let { busKiloneters.addSample(it) }
+        minibus.minibuses.map { it.meters / 1000 * it.pricePerKm }.sum().let { priceKilometers.addSample(it) }
+        minibus.minibuses.map { (it.meters /1000 )/35 * config.driverRate }.sum().let { priceBusDriver.addSample(it) }
+        priceService.addSample((currentTime() - const.WarmUpTime) / 60 / 60 * config.serviceRata * config.employees)
         airCarRentalAgent.queue.lengthStatistic().mean().let(acrQueueLength::addSample)
         clear()
     }
@@ -86,7 +91,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
 
     fun start(simEndTime: Double = 4.5 * 3600) {
         maxSimTime = simEndTime + const.WarmUpTime
-        simulate(config.replicationCount, maxSimTime  * 2.0)
+        simulate(config.replicationCount, maxSimTime  * 1.05)
     }
 
 
@@ -104,7 +109,9 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         timeStatQueueAcrToT3 = airCarRentalAgent.queueToTerminal3Stat,
         acrEmployees = airCarRentalAgent.employees,
         minibuses = minibus.minibuses,
+
         employeeOccupancy = airCarRentalAgent.employees.sumByDouble(Employee::occupancy).div(config.employees),
+
         busOccupancy = minibus.minibuses.sumByDouble(Minibus::occupancy)//.div(config.minibuses)
     )
 
@@ -122,11 +129,16 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         timeStatQueueAcr,
         queueAcrToT3,
         timeStatQueueAcrToT3,
-        acrQueueLength,
+        // acrQueueLength,
         employeeOccupancy,
-        busOccupancy
+        busOccupancy,
+        busKiloneters,
+        priceKilometers,
+        priceBusDriver,
+        priceService
     )
-    private fun spacer(name:String="") = Result(name,ResultType.Spacer)
+
+    private fun spacer(name: String = "") = Result(name, ResultType.Spacer)
 }
 
 

@@ -36,7 +36,7 @@ class MinibusMovementStart(
             .let {
                 it.minibus!!.apply {
                     isInDestination = true
-                    kilometers += source.distanceToNext(this)
+                    meters += source.distanceToNext(this)
                     source = Building.TerminalOne
                     destination = source.nextStop(this)
                 }

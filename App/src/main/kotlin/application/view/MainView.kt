@@ -29,6 +29,7 @@ class MainView : View("AirCarRental") {
         center = tabpane {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
             tab(ConfigView::class)
+            tab(Graphs::class)
             tab(MinibusesView::class)
             tab(TerminalView::class)
             tab(CarRentalView::class)

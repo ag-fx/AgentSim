@@ -5,15 +5,12 @@ import OSPABA.IdList.start
 import OSPABA.MessageForm
 import OSPABA.Scheduler
 import OSPABA.Simulation
-import OSPRNG.ExponentialRNG
 import abaextensions.WrongMessageCode
 import abaextensions.log
 import abaextensions.withCode
 import newsstand.components.convert
-import newsstand.components.entity.Building
 import newsstand.components.entity.distanceToNext
 import newsstand.components.entity.nextStop
-import newsstand.components.entity.secondsToNext
 import newsstand.constants.id
 import newsstand.constants.mc
 
@@ -43,7 +40,7 @@ class MinibusMovement(
         mc.minibusArrivedToDestination -> {
             val msg = msg.convert().createCopy()
             msg.minibus!!.apply {
-                kilometers+= source.distanceToNext(this)
+                meters+= source.distanceToNext(this)
                 isInDestination = true
                 source = destination
                 destination = destination.nextStop(this)

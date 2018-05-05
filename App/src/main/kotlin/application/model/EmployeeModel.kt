@@ -10,4 +10,5 @@ class EmployeeModel(employee: Employee) : ItemViewModel<Employee>(employee) {
     val serving = bind(Employee::serving)
     val isBusy = bind(Employee::isBusy)
     val occupancy = bind(Employee::occupancy)
+    val workTime = bind(Employee::workTime)
 }

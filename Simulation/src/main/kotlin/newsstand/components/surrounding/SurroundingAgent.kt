@@ -49,9 +49,9 @@ class SurroundingAgent(
     }
 
     override fun clear() {
-       // timeInSystemIncoming.clear()
-       // timeInSystemLeaving .clear()
-       // timeInSystemTotal .clear()
-        listOf(groupsAcr,groupsT1,groupsT2).forEach(Counter::clear)
+        timeInSystemIncoming.clear()
+        timeInSystemLeaving .clear()
+        timeInSystemTotal   .clear()
+        listOf(groupsAcr, groupsT1, groupsT2).forEach(Counter::clear)
     }
 }

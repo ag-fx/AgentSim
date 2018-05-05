@@ -9,9 +9,11 @@ class ConfigModel : ItemViewModel<Config> {
 
     val minibuses = bind(Config::minibuses)
     val employees = bind(Config::employees)
+    val xtra = bind(Config::xtra)
     val busType = bind(Config::busType)
     val slowDownAfterWarmUp = bind(Config::slowDownAfterWarmUp)
     val replicationCount = bind(Config::replicationCount)
+
     override fun onCommit() {
         super.onCommit()
 
@@ -19,6 +21,7 @@ class ConfigModel : ItemViewModel<Config> {
             minibuses = minibuses.value,
             employees = employees.value,
             busType = busType.value,
+            xtra  = xtra.value,
             slowDownAfterWarmUp = slowDownAfterWarmUp.value,
             replicationCount = replicationCount.value
         )

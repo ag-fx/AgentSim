@@ -40,6 +40,10 @@ class MinibusesView : View("Minibusy") {
                         ?: emptyList<CustomerModel>().observable())
                 }
                 column("Vytazenost", MinibusModel::occupancy).apply { isSortable = false }
+                column("Kilometers", MinibusModel::kilometers) {
+                    isSortable = false
+                converter(DoubleConv{(it/1000).format() + " km"})
+                }
 
             }
         }

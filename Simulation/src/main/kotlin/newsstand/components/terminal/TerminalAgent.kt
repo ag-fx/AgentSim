@@ -31,7 +31,6 @@ class TerminalAgent(
             mc.enterMinibusResponse,
             mc.getCustomerFromBusResponse,
             mc.clearLengthStat
-
         )
     }
 

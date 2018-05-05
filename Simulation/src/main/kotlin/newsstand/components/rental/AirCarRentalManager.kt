@@ -13,6 +13,7 @@ import newsstand.components.entity.Building
 import newsstand.components.entity.Employee
 import newsstand.components.entity.Group
 import newsstand.components.entity.isOneFree
+import newsstand.constants.const
 import newsstand.constants.id
 import newsstand.constants.mc
 import java.util.*
@@ -38,7 +39,10 @@ class AirCarRentalManager(
         mc.getCustomerFromBusResponse -> {
             if (msg.convert().group == null)
                 if (myAgent().queueToTerminal3.isEmpty())
-                    goToNextStop(msg)
+                    if (shouldSimulationContinue(msg))
+                        goToNextStop(msg)
+                    else
+                        mySim().stopReplication()
                 else
                     sendGroupToT3(msg)
             else {
@@ -64,9 +68,21 @@ class AirCarRentalManager(
             myAgent().queueStat.clear()
             myAgent().queueToTerminal3.lengthStatistic().clear()
             myAgent().queueToTerminal3Stat.clear()
+            myAgent().employees.forEach(Employee::clearWorkTime)
         }
         else -> Unit //println(msg)
 
+    }
+
+
+    private fun shouldSimulationContinue(msg: MessageForm): Boolean {
+        val afterClosingTime = mySim().currentTime() > const.ClosingDown
+        if (!afterClosingTime) return true
+
+        val serviceInProgress = myAgent().employees.toList().any(Employee::isBusy)
+        val someoneWaitingForService = myAgent().queue.isNotEmpty()
+        val waitingToGoToT3 = myAgent().queueToTerminal3.isNotEmpty()
+        return serviceInProgress || someoneWaitingForService || waitingToGoToT3
     }
 
     private fun sendGroupToT3(msg: MessageForm) {
@@ -79,16 +95,17 @@ class AirCarRentalManager(
         }
         if (queue.isNotEmpty()) {
             val groupx = mapa.map { it.value }.toMutableList() //as Queue<Group>
-            val groups : Queue<Group> = LinkedList(groupx)
+            val groups: Queue<Group> = LinkedList(groupx)
             val group = groups.peek()
             if (group.size() <= minibus.freeSeats()) {
                 group.everyone().forEach { queue.remove(it) }
+                myAgent().queueToTerminal3Stat.addSample(mySim().currentTime() - group.startWaitingTimeCarRentalToT3)
                 requestLoading(msg, group)
             }
         }
-      //else {
-      //    msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
-      //}
+        //else {
+        //    msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
+        //}
     }
 
     /** @see CustomerServiceScheduler **/
@@ -98,7 +115,7 @@ class AirCarRentalManager(
             val employee = myAgent().employees.first { it.isNotBusy() }
             val group = myAgent().queue.pop()
             val customer = group.leader
-            employee.serveCustomer(customer,mySim())
+            employee.serveCustomer(customer, mySim())
             msg.convert().group = group
             serveCustomer(msg)
         }
@@ -107,8 +124,8 @@ class AirCarRentalManager(
     private fun serviceFinished(msg: MessageForm) {
         when (msg.convert().group!!.building()) {
             Building.TerminalOne,
-            Building.TerminalTwo   -> customerLeavesWithCar(msg)
-            Building.AirCarRental  -> moveCustomerToQueue(msg)
+            Building.TerminalTwo -> customerLeavesWithCar(msg)
+            Building.AirCarRental -> moveCustomerToQueue(msg)
             Building.TerminalThree -> throw IllegalStateException("No service should finish at terminal 3")
         }
         val msg = msg.createCopy()
@@ -135,7 +152,6 @@ class AirCarRentalManager(
         .withCode(mc.getCustomerFromBusRequest)
         .toAgent(id.MinibusAgentID)
         .let { request(it) }
-
 
 
     /** @see MoveCustomerToQueueAction  **/

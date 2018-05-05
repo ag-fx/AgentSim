@@ -22,6 +22,7 @@ abstract class CustomerArrivalScheduler(
     simID: Int
 ) : Scheduler(simID, mySim, parent) {
 
+    //region processMessage
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
         start -> msg
@@ -46,11 +47,10 @@ abstract class CustomerArrivalScheduler(
 
         else -> throw WrongMessageCode(msg)
     }
+    //endregion
 
-    private fun customerArrived(msg: Message) {
-        msg.group = createGroup()
-    }
 
+    //region  timeBetweenArrivals
     // does it work? yes. do I know why? no.
     // ¯\_(ツ)_/¯
     private fun timeBetweenArrivals(): Double {
@@ -80,6 +80,7 @@ abstract class CustomerArrivalScheduler(
         }
         return genTime - mySim().currentTime()
     }
+    //endregion
 
     protected abstract val means: List<Double>
 
@@ -91,9 +92,13 @@ abstract class CustomerArrivalScheduler(
         Group(
             leader =                     Customer(mySim().currentTime(), terminal),
             family = List(groupSize()) { Customer(mySim().currentTime(), terminal) }.toMutableList(),
-            startWaitingTimeTerminal  = if(terminal!=Building.AirCarRental) mySim().currentTime() else 0.0,
+            startWaitingTimeTerminal  = mySim().currentTime(),
             startWaitingTimeCarRental = if(terminal==Building.AirCarRental) mySim().currentTime() else 0.0
         )
+
+    private fun customerArrived(msg: Message) {
+        msg.group = createGroup()
+    }
 
     private fun groupSize(): Int {
         val probability = rndGroupSizeGenerator.sample()

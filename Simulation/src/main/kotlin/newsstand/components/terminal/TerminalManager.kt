@@ -4,6 +4,7 @@ import OSPABA.Agent
 import OSPABA.Manager
 import OSPABA.MessageForm
 import OSPABA.Simulation
+import OSPStat.WStat
 import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
@@ -49,8 +50,11 @@ class TerminalManager(
                 msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
 
         mc.clearLengthStat -> {
-            myAgent().terminalOne.queue.lengthStatistic().clear()
-            myAgent().terminalTwo.queue.lengthStatistic().clear()
+
+            myAgent().terminalOne.queue.setLengthStatistic(WStat(mySim()))
+            myAgent().terminalTwo.queue.setLengthStatistic(WStat(mySim()))
+            myAgent().terminalOne.timeInQueueStat.clear()
+            myAgent().terminalTwo.timeInQueueStat.clear()
         }
 
         else -> {
@@ -71,8 +75,8 @@ class TerminalManager(
 
     private fun handleBusOnTerminal(msg: MessageForm) = msg.createCopy().convert().let {
         when (it.building!!) {
-            Building.TerminalOne -> handleBusOnTerminal(myAgent().terminalOne, msg)
-            Building.TerminalTwo -> handleBusOnTerminal(myAgent().terminalTwo, msg)
+            Building.TerminalOne -> handleBusOnTerminal(myAgent().terminalOne, it)
+            Building.TerminalTwo -> handleBusOnTerminal(myAgent().terminalTwo, it)
             else -> throw IllegalStateException()
         }
     }

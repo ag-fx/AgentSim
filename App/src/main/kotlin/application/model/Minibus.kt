@@ -11,6 +11,7 @@ class MinibusModel(val simTime:Double,minibus: Minibus) : tornadofx.ItemViewMode
     val averageSpeed = bind(Minibus::averageSpeed)
     val occupancy = bind(Minibus::occupancy)
     val capacity = bind(Minibus::capacity)
+    val kilometers = bind(Minibus::meters)
     val distanceToDestination = minibus.distanceFromDestination(simTime).toProperty()
     val isInDestination = bind(Minibus::isInDestination)
     val queue = minibus.queue.map { it.everyone() }.toList().flatten().observable()

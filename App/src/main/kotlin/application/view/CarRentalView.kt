@@ -62,6 +62,10 @@ class CarRentalView : View("AirCarRental") {
                         isSortable = false
                         converter(DoubleConv { it.format() + " %" })
                     }
+                    column("Obsluhovany cas", EmployeeModel::workTime) {
+                        isSortable = false
+                        converter(DoubleConv { (it/60/60).format() + " h" })
+                    }
                 }
             }
             hbox {

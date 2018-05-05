@@ -3,16 +3,14 @@ package application.controller
 import application.model.*
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections.observableArrayList
 import newsstand.Config
 import newsstand.NewsstandSimulation
-import newsstand.Result
 import tornadofx.*
 import tornadofx.getValue
 import tornadofx.setValue
 
-class MyController : Controller() {
+open class MyController : Controller() {
 
     val durationProperty = SimpleDoubleProperty(2.0)
     var duration by durationProperty
@@ -32,7 +30,7 @@ class MyController : Controller() {
 
     val stats = observableArrayList<ResultModel>()
 
-    fun run(config: Config) = runAsync {
+    open fun run(config: Config) = runAsync {
         sim = NewsstandSimulation(config)
         sim.onRefreshUI {
             try {
