@@ -39,6 +39,8 @@ class MinibusesView : View("Minibusy") {
                     selected.set(it?.queue?.toList()?.map { CustomerModel(it) }?.observable()
                         ?: emptyList<CustomerModel>().observable())
                 }
+                column("Vytazenost", MinibusModel::occupancy).apply { isSortable = false }
+
             }
         }
         right = hbox {

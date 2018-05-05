@@ -10,6 +10,7 @@ import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.Employee
 import newsstand.components.entity.Group
 import newsstand.components.entity.isOneFree
 import newsstand.constants.id
@@ -24,7 +25,10 @@ class AirCarRentalManager(
 
     override fun processMessage(msg: MessageForm) = when (msg.code()) {
 
-        mc.airCarRentalMinibusArrival -> requestGroup(msg)
+        mc.airCarRentalMinibusArrival -> {
+            msg.convert().minibus!!.addOccupancyStat()
+            requestGroup(msg)
+        }
 
         mc.customerArrivalTerminalAcr -> {
             moveCustomerToQueue(msg)
@@ -57,7 +61,9 @@ class AirCarRentalManager(
 
         mc.clearLengthStat -> {
             myAgent().queue.lengthStatistic().clear()
+            myAgent().queueStat.clear()
             myAgent().queueToTerminal3.lengthStatistic().clear()
+            myAgent().queueToTerminal3Stat.clear()
         }
         else -> Unit //println(msg)
 
@@ -129,6 +135,7 @@ class AirCarRentalManager(
         .withCode(mc.getCustomerFromBusRequest)
         .toAgent(id.MinibusAgentID)
         .let { request(it) }
+
 
 
     /** @see MoveCustomerToQueueAction  **/

@@ -25,7 +25,7 @@ class AirCarRentalAgent(
     val queueStat            = Stat()
     val queueToTerminal3     = SimQueue<Customer>(WStat(mySim))
     val queueToTerminal3Stat = Stat()
-    val employees             = List(employees) { Employee(it) }.onEach { it.setStat(mySim) }
+    val employees            = List(employees) { Employee(it) }.onEach { it.setStat(mySim) }
 
     init {
         AirCarRentalManager(mySim, this)

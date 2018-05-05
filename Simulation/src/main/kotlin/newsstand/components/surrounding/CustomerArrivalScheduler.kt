@@ -55,7 +55,7 @@ abstract class CustomerArrivalScheduler(
     // ¯\_(ツ)_/¯
     private fun timeBetweenArrivals(): Double {
         val generated: Double
-        var interval = 0
+        var interval : Int
         if (mySim().currentTime() <= const.WarmUpTime) {
             interval = 0
             generated = generators[interval].sample()

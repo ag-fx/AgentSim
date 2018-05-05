@@ -12,17 +12,17 @@ data class Result(val name: String, private val resultType: ResultType = ResultT
     fun addSample(sample: Double) = stat.addSample(sample)
 
     fun mean() = when (resultType) {
-        ResultType.Other -> stat.mean().format()
-        ResultType.Time  -> (stat.mean() / 60.0).format()
+        ResultType.Other  -> stat.mean().format()
+        ResultType.Time   -> (stat.mean() / 60.0).format()
         ResultType.Spacer -> ""
     }
 
-    fun confidenceInterval_90(): String {
-        if(resultType==ResultType.Spacer)  return ""
+    fun confidenceInterval90(): String {
+        if (resultType == ResultType.Spacer) return ""
         if (stat.sampleSize() > 2.1) {
             val c = when (resultType) {
-                ResultType.Other -> stat.confidenceInterval_90().map { it.format() }
-                ResultType.Time  -> stat.confidenceInterval_90().map { it / 60.0 }.map { it.format() }
+                ResultType.Other  -> stat.confidenceInterval_90().map { it.format() }
+                ResultType.Time   -> stat.confidenceInterval_90().map { it / 60.0 }.map { it.format() }
                 ResultType.Spacer -> TODO()
             }
             return "<${c[0]} , ${c[1]}>"
@@ -30,12 +30,12 @@ data class Result(val name: String, private val resultType: ResultType = ResultT
 
     }
 
-    fun confidenceInterval_95(): String {
-        if(resultType==ResultType.Spacer)  return ""
+    fun confidenceInterval95(): String {
+        if (resultType == ResultType.Spacer) return ""
         if (stat.sampleSize() > 2.1) {
             val c = when (resultType) {
-                ResultType.Other -> stat.confidenceInterval_95().map { it.format() }
-                ResultType.Time  -> stat.confidenceInterval_95().map { it / 60.0 }.map { it.format() }
+                ResultType.Other  -> stat.confidenceInterval_95().map { it.format() }
+                ResultType.Time   -> stat.confidenceInterval_95().map { it / 60.0 }.map { it.format() }
                 ResultType.Spacer -> TODO()
             }
             return "<${c[0]} , ${c[1]}>"

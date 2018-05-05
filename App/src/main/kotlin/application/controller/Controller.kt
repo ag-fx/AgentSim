@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections.observableArrayList
+import newsstand.Config
 import newsstand.NewsstandSimulation
 import newsstand.Result
 import tornadofx.*
@@ -24,15 +25,15 @@ class MyController : Controller() {
     val carRentalQueue = observableArrayList<CustomerModel>()
     val carRentalQueueToT3 = observableArrayList<CustomerModel>()
     val employees = observableArrayList<EmployeeModel>()
-    val sim = NewsstandSimulation()
 
+    lateinit var sim: NewsstandSimulation
     val simTime = SimpleDoubleProperty(0.0)
     val simStateModel = SimpleObjectProperty<SimStateModel>()
 
     val stats = observableArrayList<ResultModel>()
 
-    fun run() = runAsync {
-
+    fun run(config: Config) = runAsync {
+        sim = NewsstandSimulation(config)
         sim.onRefreshUI {
             try {
                 val x = sim.getState()
@@ -51,7 +52,7 @@ class MyController : Controller() {
 
         sim.onReplicationDidFinish {
             sim.allResults.map(::ResultModel).let(stats::setAll)
-            runLater { simulationProgress.set(sim.currentReplication()/sim.replicationCount().toDouble() ) }
+            runLater { simulationProgress.set(sim.currentReplication() / sim.replicationCount().toDouble()) }
         }
 
         sim.start()
@@ -62,6 +63,7 @@ class MyController : Controller() {
     }
 
     fun fullSpeed() {
+        sim.config.slowDownAfterWarmUp = false
         sim.setMaxSimSpeed()
     }
 

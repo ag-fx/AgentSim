@@ -11,3 +11,4 @@ class TerminalModel(terminal: Terminal) : ItemViewModel<Terminal>(terminal) {
     override fun equals(other: Any?) = other is TerminalModel && building.value == other.building.value
 }
 
+

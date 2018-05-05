@@ -48,7 +48,7 @@ class SurroundingManager(
         }
 
         mc.customerLeaving -> customerLeaving(message.createCopy())
-
+        mc.clearLengthStat -> myAgent().clear()
         else -> throw WrongMessageCode(message)
     }
 

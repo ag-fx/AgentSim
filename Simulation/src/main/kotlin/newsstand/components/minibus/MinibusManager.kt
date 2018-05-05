@@ -11,6 +11,7 @@ import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.Minibus
 import newsstand.components.setMinibus
 import newsstand.constants.id
 import newsstand.constants.id.MinibusMovementStartID
@@ -70,6 +71,8 @@ class MinibusManager(
             .createCopy()
             .toAgentsAssistant(myAgent(), id.ExitFromMinibusSchedulerID)
             .let { startContinualAssistant(it) }
+
+        mc.clearLengthStat -> myAgent().minibuses.forEach(Minibus::clearStats)
 
         else -> throw WrongMessageCode(msg)
     }

@@ -23,7 +23,8 @@ class TerminalView : View("Terminals") {
         vgrow = Priority.ALWAYS
         hgrow = Priority.ALWAYS
         hbox {
-
+            vgrow = Priority.ALWAYS
+            hgrow = Priority.ALWAYS
             Building
                 .values()
                 .filter { it != Building.AirCarRental }
@@ -56,7 +57,11 @@ class TerminalView : View("Terminals") {
                     }
 
                     hbox {
+                        vgrow = Priority.ALWAYS
+                        hgrow = Priority.ALWAYS
                         borderpane {
+                            vgrow = Priority.ALWAYS
+                            hgrow = Priority.ALWAYS
                             padding = Insets(20.0)
                             center = vbox {
                                 vgrow = Priority.ALWAYS
@@ -78,7 +83,7 @@ class TerminalView : View("Terminals") {
                             right = hbox {
                                 paddingLeft = 24
                                vbox {
-                                   prefWidth = 200.0
+                                   prefWidth = 300.0
                                     addClass("card")
                                     label("Statistics").addClass("card-title")
                                     text(it.toString())

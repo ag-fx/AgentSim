@@ -25,11 +25,19 @@ class TerminalManager(
         mc.customerArrivalTerminalOne,
         mc.customerArrivalTerminalTwo -> addGroupToQueue(msg)
 
-        mc.terminalOneMinibusArrival -> handleBusOnTerminal(myAgent().terminalOne, msg)
+        mc.terminalOneMinibusArrival -> {
+            msg.convert().minibus!!.addOccupancyStat()
+            handleBusOnTerminal(myAgent().terminalOne, msg)
+        }
 
-        mc.terminalTwoMinibusArrival -> handleBusOnTerminal(myAgent().terminalTwo, msg)
+        mc.terminalTwoMinibusArrival -> {
+            msg.convert().minibus!!.addOccupancyStat()
+            handleBusOnTerminal(myAgent().terminalTwo, msg)}
 
-        mc.terminalThreeMinibusArrival -> requestPeopleFromMinibus(msg)
+        mc.terminalThreeMinibusArrival -> {
+            msg.convert().minibus!!.addOccupancyStat()
+            requestPeopleFromMinibus(msg)
+        }
 
         mc.enterMinibusResponse -> handleBusOnTerminal(msg)
 

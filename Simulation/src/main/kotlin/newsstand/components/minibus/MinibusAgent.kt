@@ -35,7 +35,8 @@ class MinibusAgent(
             mc.customerExitedMinibus,
             mc.customerEnteredMinibus,
             mc.enterMinibusRequest,
-            mc.getCustomerFromBusResponse
+            mc.getCustomerFromBusResponse,
+            mc.clearLengthStat
 
         )
     }

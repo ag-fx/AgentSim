@@ -19,7 +19,6 @@ class MainView : View("AirCarRental") {
             hbox {
                 addClass("menu-bar")
                 spacing = 10.0
-                button("Run") { action { controller.run() } }
                 button("Full speed") { action { controller.fullSpeed() } }
                 button("Slow speed") { action { controller.setSimSpeed() } }
                 button("PAUSE") { action { controller.pause() } }
@@ -29,8 +28,7 @@ class MainView : View("AirCarRental") {
         }
         center = tabpane {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
-
-            tab(Config::class)
+            tab(ConfigView::class)
             tab(MinibusesView::class)
             tab(TerminalView::class)
             tab(CarRentalView::class)

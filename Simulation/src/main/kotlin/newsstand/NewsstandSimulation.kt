@@ -3,7 +3,8 @@ package newsstand
 import OSPABA.Simulation
 import OSPDataStruct.SimQueue
 import newsstand.components.boss.BossAgent
-import newsstand.components.entity.BusType
+import newsstand.components.entity.Employee
+import newsstand.components.entity.Minibus
 import newsstand.components.minibus.MinibusAgent
 import newsstand.components.rental.AirCarRentalAgent
 import newsstand.components.surrounding.SurroundingAgent
@@ -11,16 +12,6 @@ import newsstand.components.terminal.TerminalAgent
 import newsstand.constants.Clearable
 import newsstand.constants.const
 
-data class Config(
-    val minibuses: Int = 3,
-    val employees: Int = 3,
-    val busType: BusType = BusType.A,
-    val slowDownAfterWarmUp: Boolean = false,
-    val replicationCount: Int = 1000
-)
-
-
-@Suppress("MemberVisibilityCanBePrivate")
 class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearable {
 
     private val boss = BossAgent(this, config)
@@ -43,8 +34,8 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     val timeStatQueueAcrToT3 = Result("Čas čakania na odvoz",ResultType.Time)
     val acrQueueLength = Result("")
 
-    //TODO Vyťaženosť minibusu
-    //TODO Vyťaženosť obsluhujúceho
+    val employeeOccupancy = Result("Vyťaženosť obsluhujúceho")
+    val busOccupancy = Result("Vyťaženosť autobusov")
     //TODO Čas čakania prichádzajúcich
     //TODO Čas čakania odchádzajúcich
     //TODO Trvanie jednej prevádzky
@@ -78,6 +69,8 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         repState.timeStatQueueAcr.mean().let { timeStatQueueAcr.addSample(it) }
         repState.queueAcrToT3.mean().let { queueAcrToT3.addSample(it) }
         repState.timeStatQueueAcrToT3.mean().let { timeStatQueueAcrToT3.addSample(it) }
+        repState.employeeOccupancy.let { employeeOccupancy.addSample(it) }
+        repState.busOccupancy.let { busOccupancy.addSample(it) }
 
         airCarRentalAgent.queue.lengthStatistic().mean().let(acrQueueLength::addSample)
         clear()
@@ -85,10 +78,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
 
     override fun simulationFinished() {
         super.simulationFinished()
-        println("timeInSystemIncoming \t${timeInSystemIncoming.mean()}")
-        println("timeInSystemLeaving  \t${timeInSystemLeaving.mean()}")
-        println("timeInSystemTotal    \t${timeInSystemTotal.mean()}")
-        println("acrQueueLength \t${acrQueueLength.mean()}")
+
     }
 
     override fun clear() = listOf<Clearable>(boss, surrounding, terminal, minibus, airCarRentalAgent)
@@ -96,7 +86,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
 
     fun start(simEndTime: Double = 4.5 * 3600) {
         maxSimTime = simEndTime + const.WarmUpTime
-        simulate(config.replicationCount, maxSimTime * 2)
+        simulate(config.replicationCount, maxSimTime  * 2)
     }
 
 
@@ -113,12 +103,14 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         queueAcrToT3 = airCarRentalAgent.queueToTerminal3,
         timeStatQueueAcrToT3 = airCarRentalAgent.queueToTerminal3Stat,
         acrEmployees = airCarRentalAgent.employees,
-        minibuses = minibus.minibuses
+        minibuses = minibus.minibuses,
+        employeeOccupancy = airCarRentalAgent.employees.sumByDouble(Employee::occupancy).div(config.employees),
+        busOccupancy = minibus.minibuses.sumByDouble(Minibus::occupancy)//.div(config.minibuses)
     )
 
     val allResults = listOf(
-        timeInSystemLeaving,
         timeInSystemIncoming,
+        timeInSystemLeaving,
         timeInSystemTotal,
         spacer(),
         queueT1,
@@ -130,7 +122,9 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         timeStatQueueAcr,
         queueAcrToT3,
         timeStatQueueAcrToT3,
-        acrQueueLength
+        acrQueueLength,
+        employeeOccupancy,
+        busOccupancy
     )
     private fun spacer(name:String="") = Result(name,ResultType.Spacer)
 }

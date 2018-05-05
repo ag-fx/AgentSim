@@ -1,9 +1,13 @@
 package newsstand.components.entity
 
+import OSPABA.Simulation
 import OSPDataStruct.SimQueue
+import OSPStat.Stat
+import OSPStat.WStat
 import newsstand.clearStat
 import newsstand.constants.Clearable
 
+enum class Occupied { Yes }
 data class Minibus(
     val id: Int,
     var source: Building,
@@ -13,6 +17,7 @@ data class Minibus(
     val type : BusType,
     var isInDestination: Boolean = false,
     val queue: SimQueue<Group> = SimQueue(),
+    private val occupancy: Stat = Stat(),
     var kilometers : Double = .0
 ) : Clearable {
     fun secondsToDestination() = source.secondsToNext(this)
@@ -24,12 +29,21 @@ data class Minibus(
             BusType.C -> 30
         }
 
+    fun addOccupancyStat() = occupancy.addSample(queue.toList().map { it.everyone().size }.fold(.0){acc, list -> acc+list }/12)
+    fun occupancy() = occupancy.mean()*100
+
+    fun clearStats(){
+        occupancy.clear()
+        kilometers = .0
+    }
+
+
     override fun clear() {
         source          = Building.AirCarRental
         destination     = Building.TerminalOne
         leftAt          = .0//const.StartTime
         isInDestination = false
-        queue.clearStat()
+        clearStats()
     }
 
     fun isNotEmpty() = queue.isNotEmpty()

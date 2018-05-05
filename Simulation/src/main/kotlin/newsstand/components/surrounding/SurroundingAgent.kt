@@ -43,14 +43,15 @@ class SurroundingAgent(
         addOwnMessages(
             mc.init,
             mc.newCustomer,
-            mc.customerLeaving
+            mc.customerLeaving,
+            mc.clearLengthStat
         )
     }
 
     override fun clear() {
-        timeInSystemIncoming.clear()
-        timeInSystemLeaving .clear()
-        timeInSystemTotal .clear()
+       // timeInSystemIncoming.clear()
+       // timeInSystemLeaving .clear()
+       // timeInSystemTotal .clear()
         listOf(groupsAcr,groupsT1,groupsT2).forEach(Counter::clear)
     }
 }

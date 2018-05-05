@@ -24,6 +24,6 @@ class SimulationModel(simulatio:NewsstandSimulation) :  ItemViewModel<NewsstandS
 class ResultModel(result:Result) : tornadofx.ItemViewModel<Result>(result) {
     val name = bind(Result::name)
     val mean = bind(Result::mean)
-    val confidence90 = bind(Result::confidenceInterval_90)
-    val confidence95 = bind(Result::confidenceInterval_95)
+    val confidence90 = bind(Result::confidenceInterval90)
+    val confidence95 = bind(Result::confidenceInterval95)
 }

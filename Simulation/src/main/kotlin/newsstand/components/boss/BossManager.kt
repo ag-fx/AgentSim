@@ -23,9 +23,8 @@ class BossManager(
         finish -> when (message.sender()) {
 
             is AfterWarmUpScheduler -> {
-                if(config.slowDownAfterWarmUp)
-                    mySim().setSimSpeed(1.0, 1.0)
-                listOf(id.TerminalAgentID, id.AirCarRentalAgentID)
+                if (config.slowDownAfterWarmUp) mySim().setSimSpeed(1.0, 1.0)
+                listOf(id.TerminalAgentID, id.AirCarRentalAgentID,id.MinibusAgentID)
                     .forEach {
                         message
                             .createCopy()

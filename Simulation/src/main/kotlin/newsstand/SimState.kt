@@ -17,7 +17,10 @@ data class SimState(
     val timeStatQueueT1: Stat = Stat(),
     val timeStatQueueT2: Stat = Stat(),
     val timeStatQueueAcr: Stat = Stat(),
-    val timeStatQueueAcrToT3: Stat = Stat()
+    val timeStatQueueAcrToT3: Stat = Stat(),
+
+    val employeeOccupancy : Double = 0.0,
+    val busOccupancy : Double = 0.0
 )
 
 

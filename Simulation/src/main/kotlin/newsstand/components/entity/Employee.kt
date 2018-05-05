@@ -10,7 +10,7 @@ data class Employee(
     val id: Int,
     var serving: Customer? = null,
     var isBusy: Boolean = false,
-    val occupancy: SimQueue<Work> = SimQueue(),
+    private val occupancy: SimQueue<Work> = SimQueue(),
     private var serveStart: Double = 0.0,
     var workTime: Double = 0.0
 ) : Clearable {
@@ -19,6 +19,8 @@ data class Employee(
     fun setStat(mySym: Simulation) {
         occupancy.setLengthStatistic(WStat(mySym))
     }
+
+    fun occupancy() = occupancy.lengthStatistic().mean() * 100
 
     override fun clear() {
         serveStart = 0.0
@@ -41,7 +43,7 @@ data class Employee(
     fun done(mySym: Simulation) {
         workTime += mySym.currentTime() - serveStart
         serveStart = 0.0
-        occupancy.remove()
+        if (occupancy.isNotEmpty()) occupancy.remove()
         serving = null
         isBusy = false
     }
