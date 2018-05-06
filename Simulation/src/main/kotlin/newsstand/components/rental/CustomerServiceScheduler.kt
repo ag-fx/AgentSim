@@ -43,13 +43,13 @@ class CustomerServiceScheduler(
     private fun MessageForm.serviceTime() = if (this.convert().group!!.leader.building == Building.AirCarRental) rndOut() else rndIn()
 
     private fun rndOut() =
-        if (rndProbabilityOut.sample() < 0.4)
+        if (rndProbabilityOut.sample() < 1-(633.0/832))
             rndOutSmaller.sample()
         else
             rndOutBigger.sample()
 
     private fun rndIn() =
-        if (rndProbabilityIn.sample() < 0.4)
+        if (rndProbabilityIn.sample() < 1-(847/978))
             rndInSmaller.sample()
         else
             rndInBigger.sample()

@@ -33,7 +33,8 @@ class TerminalManager(
 
         mc.terminalTwoMinibusArrival -> {
             msg.convert().minibus!!.addOccupancyStat()
-            handleBusOnTerminal(myAgent().terminalTwo, msg)}
+            handleBusOnTerminal(myAgent().terminalTwo, msg)
+        }
 
         mc.terminalThreeMinibusArrival -> {
             msg.convert().minibus!!.addOccupancyStat()
@@ -49,13 +50,8 @@ class TerminalManager(
             } else
                 msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
 
-        mc.clearLengthStat -> {
+        mc.clearLengthStat -> listOf(myAgent().terminalOne, myAgent().terminalTwo).forEach(Terminal::clearAfterWarmUp)
 
-            myAgent().terminalOne.queue.setLengthStatistic(WStat(mySim()))
-            myAgent().terminalTwo.queue.setLengthStatistic(WStat(mySim()))
-            myAgent().terminalOne.timeInQueueStat.clear()
-            myAgent().terminalTwo.timeInQueueStat.clear()
-        }
 
         else -> {
         }

@@ -32,11 +32,13 @@ data class Minibus(
         BusType.C -> 0.54
     }
 
-    fun addOccupancyStat() = occupancy.addSample(queue.toList().map { it.everyone().size }.fold(.0){acc, list -> acc+list }/12)
-    fun occupancy() = occupancy.mean()*100
+    fun addOccupancyStat() = occupancy.addSample(queue.sumBy(Group::size) / capacity.toDouble())
+
+    fun occupancy() = occupancy.mean() * 100
 
     fun clearStats(){
         occupancy.clear()
+        queue?.lengthStatistic()?.clear()
         meters = .0
     }
 
@@ -44,7 +46,7 @@ data class Minibus(
     override fun clear() {
         source          = Building.AirCarRental
         destination     = Building.TerminalOne
-        leftAt          = .0//const.StartTime
+        leftAt          = .0
         isInDestination = false
         clearStats()
     }

@@ -1,5 +1,6 @@
 package newsstand
 
+import OSPABA.SimComponent
 import OSPABA.Simulation
 import OSPDataStruct.SimQueue
 import newsstand.components.boss.BossAgent
@@ -43,7 +44,7 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     val priceService            = Result("Cena prace obsluhujúci")
     val priceAll                = Result("Cena spolu")
 
-    private var maxSimTime: Double = 0.0
+    private var maxSimTime = 0.0
 
     var warmedUp = false
 
@@ -57,34 +58,33 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     override fun replicationFinished() {
         super.replicationFinished()
         val repState = getState()
-        repState.timeInSystemIncoming.mean().let(timeInSystemIncoming::addSample)
-        repState.timeInSystemLeaving.mean().let(timeInSystemLeaving::addSample)
-        repState.timeInSystemTotal.mean().let(timeInSystemTotal::addSample)
-        repState.queueT1.mean().let { queueT1.addSample(it) }
-        repState.timeStatQueueT1.mean().let { timeStatQueueT1.addSample(it/60) }
-        repState.queueT2.mean().let { queueT2.addSample(it) }
-        repState.timeStatQueueT2.mean().let { timeStatQueueT2.addSample(it/60) }
-        repState.queueAcr.mean().let { queueAcr.addSample(it) }
-        repState.timeStatQueueAcr.mean().let { timeStatQueueAcr.addSample(it/60) }
-        repState.queueAcrToT3.mean().let { queueAcrToT3.addSample(it) }
-        repState.timeStatQueueAcrToT3.mean().let { timeStatQueueAcrToT3.addSample(it/60) }
-        repState.employeeOccupancy.let { employeeOccupancy.addSample(it) }
-        repState.busOccupancy.let { busOccupancy.addSample(it) }
-        minibus.minibuses.map { it.meters / 1000 }.sum().let { busKiloneters.addSample(it) }
+        repState.timeInSystemIncoming.mean()    .let(timeInSystemIncoming::addSample)
+        repState.timeInSystemLeaving.mean()     .let(timeInSystemLeaving::addSample)
+        repState.timeInSystemTotal.mean()       .let(timeInSystemTotal::addSample)
+        repState.queueT1.mean()                 .let(queueT1::addSample)
+        repState.timeStatQueueT1.mean()         .let { timeStatQueueT1.addSample(it/60) }
+        repState.queueT2.mean()                 .let(queueT2::addSample)
+        repState.timeStatQueueT2.mean()         .let { timeStatQueueT2.addSample(it/60) }
+        repState.queueAcr.mean()                .let(queueAcr::addSample)
+        repState.timeStatQueueAcr.mean()        .let { timeStatQueueAcr.addSample(it/60) }
+        repState.queueAcrToT3.mean()            .let(queueAcrToT3::addSample)
+        repState.timeStatQueueAcrToT3.mean()    .let { timeStatQueueAcrToT3.addSample(it/60) }
+        repState.employeeOccupancy              .let(employeeOccupancy::addSample)
+        repState.busOccupancy                   .let(busOccupancy::addSample)
+        minibus
+            .minibuses
+            .map { it.meters / 1000 }
+            .sum()
+            .let(busKiloneters::addSample)
         var price = .0
         minibus.minibuses.map { it.meters / 1000 * it.pricePerKm }.sum().let { priceKilometers.addSample(it); price+= it }
         minibus.minibuses.map { (it.meters /1000 )/35 * config.driverRate }.sum().let { priceBusDriver.addSample(it) ; price+= it }
         val servicePrice = (currentTime() - const.WarmUpTime) / 60 / 60 * config.serviceRata * config.employees
-        priceService.addSample (servicePrice )
+        priceService.addSample(servicePrice)
         price += servicePrice
         priceAll.addSample(price)
         airCarRentalAgent.queue.lengthStatistic().mean().let(acrQueueLength::addSample)
         clear()
-    }
-
-    override fun simulationFinished() {
-        super.simulationFinished()
-
     }
 
     override fun clear() = listOf<Clearable>(boss, surrounding, terminal, minibus, airCarRentalAgent)
@@ -95,25 +95,22 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         simulate(config.replicationCount, maxSimTime  * 1.05)
     }
 
-
     fun getState() = SimState(
-        timeInSystemIncoming = surrounding.timeInSystemIncoming,
-        timeInSystemLeaving = surrounding.timeInSystemLeaving,
-        timeInSystemTotal = surrounding.timeInSystemTotal,
-        queueT1 = terminal.terminalOne.queue,
-        timeStatQueueT1 = terminal.terminalOne.timeInQueueStat,
-        queueT2 = terminal.terminalTwo.queue,
-        timeStatQueueT2 = terminal.terminalTwo.timeInQueueStat,
-        queueAcr = airCarRentalAgent.queue,
-        timeStatQueueAcr = airCarRentalAgent.queueStat,
-        queueAcrToT3 = airCarRentalAgent.queueToTerminal3,
-        timeStatQueueAcrToT3 = airCarRentalAgent.queueToTerminal3Stat,
-        acrEmployees = airCarRentalAgent.employees,
-        minibuses = minibus.minibuses,
-
-        employeeOccupancy = airCarRentalAgent.employees.sumByDouble(Employee::occupancy).div(config.employees),
-
-        busOccupancy = minibus.minibuses.sumByDouble(Minibus::occupancy)//.div(config.minibuses)
+        timeInSystemIncoming    = surrounding.timeInSystemIncoming,
+        timeInSystemLeaving     = surrounding.timeInSystemLeaving,
+        timeInSystemTotal       = surrounding.timeInSystemTotal,
+        queueT1                 = terminal.terminalOne.queue,
+        timeStatQueueT1         = terminal.terminalOne.timeInQueueStat,
+        queueT2                 = terminal.terminalTwo.queue,
+        timeStatQueueT2         = terminal.terminalTwo.timeInQueueStat,
+        queueAcr                = airCarRentalAgent.queue,
+        timeStatQueueAcr        = airCarRentalAgent.queueStat,
+        queueAcrToT3            = airCarRentalAgent.queueToTerminal3,
+        timeStatQueueAcrToT3    = airCarRentalAgent.queueToTerminal3Stat,
+        acrEmployees            = airCarRentalAgent.employees,
+        minibuses               = minibus.minibuses,
+        employeeOccupancy       = airCarRentalAgent.employees.sumByDouble(Employee::occupancy).div(config.employees),
+        busOccupancy            = minibus.minibuses.sumByDouble(Minibus::occupancy)
     )
 
     val allResults = listOf(
@@ -141,8 +138,10 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     )
 
     private fun spacer(name: String = "") = Result(name, ResultType.Spacer)
+
 }
 
+fun SimComponent.isWarmedUp() = mySim().currentTime() > const.WarmUpTime
 
 fun <E> SimQueue<E>.clearStat() {
     clear()

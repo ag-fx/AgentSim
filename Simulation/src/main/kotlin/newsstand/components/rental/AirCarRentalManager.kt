@@ -63,13 +63,7 @@ class AirCarRentalManager(
             else
                 sendGroupToT3(msg)
 
-        mc.clearLengthStat -> {
-            myAgent().queue.lengthStatistic().clear()
-            myAgent().queueStat.clear()
-            myAgent().queueToTerminal3.lengthStatistic().clear()
-            myAgent().queueToTerminal3Stat.clear()
-            myAgent().employees.forEach(Employee::clearWorkTime)
-        }
+        mc.clearLengthStat -> myAgent().clearAfterWarmup()
         else -> Unit //println(msg)
 
     }

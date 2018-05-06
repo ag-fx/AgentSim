@@ -35,6 +35,10 @@ data class Employee(
         workTime = 0.0
     }
 
+    fun clearAfterWarmup(){
+        occupancy.lengthStatistic().clear()
+        workTime = .0
+    }
     fun isNotBusy() = !isBusy
 
     fun serveCustomer(customer: Customer, mySym: Simulation) {

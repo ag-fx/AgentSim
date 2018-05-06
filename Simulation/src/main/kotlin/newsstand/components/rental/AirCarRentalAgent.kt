@@ -44,14 +44,21 @@ class AirCarRentalAgent(
         )
     }
 
-
+    fun clearAfterWarmup(){
+        totalCustomers = 0
+        queue.lengthStatistic().clear()
+        queueToTerminal3.lengthStatistic().clear()
+        queueToTerminal3Stat.clear()
+        employees.forEach(Employee::clearAfterWarmup)
+    }
 
     override fun clear(){
         queue.clearStat()
+        queueStat.clear()
         queueToTerminal3.clearStat()
         queueToTerminal3Stat.clear()
-        queueStat.clear()
         employees.forEach(Employee::clear)
+        totalCustomers = 0
     }
 
 }

@@ -17,10 +17,9 @@ class MinibusAgent(
     conf: Config
 ) : Agent(id.MinibusAgentID, mySim, parent), Clearable {
 
-    val minibuses = List(conf.minibuses) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0,type = conf.busType) }
+    val minibuses = List(conf.minibuses) { Minibus(it, Building.AirCarRental, Building.TerminalOne, .0, type = conf.busType) }
 
     init {
-
         MinibusManager(mySim, this)
         MinibusMovementStart(mySim, this)
         MinibusMovement(mySim, this)
@@ -37,8 +36,11 @@ class MinibusAgent(
             mc.enterMinibusRequest,
             mc.getCustomerFromBusResponse,
             mc.clearLengthStat
-
         )
+    }
+
+    fun clearAfterWarmUp(){
+        minibuses.forEach(Minibus::clearStats)
     }
 
     override fun clear() {

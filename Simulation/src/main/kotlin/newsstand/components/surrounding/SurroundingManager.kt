@@ -11,6 +11,7 @@ import abaextensions.toAgentsAssistant
 import abaextensions.withCode
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.constants.const
 import newsstand.constants.id
 import newsstand.constants.mc
 import newsstand.constants.mc.init
@@ -32,11 +33,11 @@ class SurroundingManager(
             }
 
         finish -> when (message.sender()) {
-            is TerminalOneCustomerArrivalScheduler  -> {
+            is TerminalOneCustomerArrivalScheduler -> {
                 myAgent().groupsT1.inc()
                 message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalOne)
             }
-            is TerminalTwoCustomerArrivalScheduler  -> {
+            is TerminalTwoCustomerArrivalScheduler -> {
                 myAgent().groupsT2.inc()
                 message.notifyCustomerArrival(id.TerminalAgentID, mc.customerArrivalTerminalTwo)
             }
@@ -59,14 +60,15 @@ class SurroundingManager(
         .let { notice(it) }
 
     private fun customerLeaving(msg: MessageForm) = msg.createCopy().convert().let {
-        val group = it.group!!
-
-        myAgent().timeInSystemTotal.addSample(mySim().currentTime() - group.arrivedToSystem())
-        when(group.building()){
-            Building.TerminalOne,
-            Building.TerminalTwo   -> myAgent().timeInSystemIncoming.addSample(mySim().currentTime() - group.arrivedToSystem())
-            Building.TerminalThree -> throw IllegalStateException("Should not happen")
-            Building.AirCarRental  -> myAgent().timeInSystemLeaving.addSample(mySim().currentTime() - group.arrivedToSystem())
+        if (mySim().currentTime() > const.WarmUpTime) {
+            val group = it.group!!
+            myAgent().timeInSystemTotal.addSample(mySim().currentTime() - group.arrivedToSystem())
+            when (group.building()) {
+                Building.TerminalOne,
+                Building.TerminalTwo -> myAgent().timeInSystemIncoming.addSample(mySim().currentTime() - group.arrivedToSystem())
+                Building.TerminalThree -> throw IllegalStateException("Should not happen")
+                Building.AirCarRental -> myAgent().timeInSystemLeaving.addSample(mySim().currentTime() - group.arrivedToSystem())
+            }
         }
     }
 

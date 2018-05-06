@@ -40,17 +40,20 @@ class TimeInSystemGraphView : View("Priemerný čas v simulácii") {
 
         center = linechart("", NumberAxis(), NumberAxis()) {
             series("Spolocný čas", controller.timeData)
+            series("Prichadazujuci ",controller.timeDataIn)
+            series("Odchadazujuci",controller.timeDataOut)
             createSymbols = false
             with(xAxis as NumberAxis) {
-                isForceZeroInRange = false
+              //  isForceZeroInRange = false
                 isAutoRanging = true
                 title = "Replikácia"
+                isLegendVisible = true
             }
             with(yAxis as NumberAxis) {
-                isForceZeroInRange = false
+               // isForceZeroInRange = false
                 isAutoRanging = true
                 title = "čas v systéme"
-
+                isLegendVisible = true
             }
         }
     }

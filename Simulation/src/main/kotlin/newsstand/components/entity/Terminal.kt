@@ -13,6 +13,12 @@ abstract class Terminal(val building: Building, sim: Simulation? = null) : Clear
     val timeInQueueStat = Stat()
     var totalCustomers  = 0
 
+    fun clearAfterWarmUp(){
+        queue.lengthStatistic().clear()
+        timeInQueueStat.clear()
+        totalCustomers = 0
+    }
+
     override fun clear(){
         queue.clearStat()
         timeInQueueStat.clear()

@@ -19,7 +19,9 @@ open class MyController : Controller() {
 
 
     val simulationProgress = SimpleDoubleProperty(.0)
-    val timeData = FXCollections.observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeData      = observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeDataIn    = observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeDataOut   = observableArrayList<XYChart.Data<Number, Number>>()!!
 
     val minibuses = observableArrayList<MinibusModel>()
     val queueT1 = observableArrayList<CustomerModel>()
@@ -56,7 +58,9 @@ open class MyController : Controller() {
             sim.allResults.map(::ResultModel).let(stats::setAll)
             runLater {
                 simulationProgress.set(sim.currentReplication() / sim.replicationCount().toDouble())
-                sim.timeInSystemTotal.mean().let { timeData.add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemTotal.mean()   .let { timeData   .add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemIncoming.mean().let { timeDataIn .add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemLeaving.mean() .let { timeDataOut.add(sim.currentReplication() to it.toDouble()) }
             }
         }
 
