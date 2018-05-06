@@ -1,5 +1,6 @@
 package application.controller
 
+import OSPABA.Simulation
 import application.model.*
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -19,9 +20,9 @@ open class MyController : Controller() {
 
 
     val simulationProgress = SimpleDoubleProperty(.0)
-    val timeData      = observableArrayList<XYChart.Data<Number, Number>>()!!
-    val timeDataIn    = observableArrayList<XYChart.Data<Number, Number>>()!!
-    val timeDataOut   = observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeData = observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeDataIn = observableArrayList<XYChart.Data<Number, Number>>()!!
+    val timeDataOut = observableArrayList<XYChart.Data<Number, Number>>()!!
 
     val minibuses = observableArrayList<MinibusModel>()
     val queueT1 = observableArrayList<CustomerModel>()
@@ -38,29 +39,26 @@ open class MyController : Controller() {
 
     open fun run(config: Config) = runAsync {
         sim = NewsstandSimulation(config)
-        sim.onRefreshUI {
-            try {
-                val x = sim.getState()
-                runLater { simStateModel.set(SimStateModel(x)) }
-                sim.getState().minibuses.map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
-                sim.getState().queueT1.map(::CustomerModel).let(queueT1::setAll)
-                sim.getState().queueT2.map(::CustomerModel).let(queueT2::setAll)
-                sim.getState().acrEmployees.map(::EmployeeModel).let(employees::setAll)
-                sim.getState().queueAcr.map { it.leader }.map(::CustomerModel).let(carRentalQueue::setAll)
-                sim.getState().queueAcrToT3.map(::CustomerModel).let(carRentalQueueToT3::setAll)
-                simTime.set(sim.currentTime())
-            } catch (e: Throwable) {
 
-            }
+        sim.onRefreshUI { sim ->
+                val x = (sim as NewsstandSimulation).getState()
+                runLater { simStateModel.set(SimStateModel(x)) }
+                x.minibuses     .map { MinibusModel(sim.currentTime(), it) }.let(minibuses::setAll)
+                x.queueT1       .map(::CustomerModel).let(queueT1::setAll)
+                x.queueT2       .map(::CustomerModel).let(queueT2::setAll)
+                x.acrEmployees  .map(::EmployeeModel).let(employees::setAll)
+                x.queueAcr      .map { it.leader }.map(::CustomerModel).let(carRentalQueue::setAll)
+                x.queueAcrToT3  .map(::CustomerModel).let(carRentalQueueToT3::setAll)
+                simTime.set(sim.currentTime())
         }
 
         sim.onReplicationDidFinish {
             sim.allResults.map(::ResultModel).let(stats::setAll)
             runLater {
                 simulationProgress.set(sim.currentReplication() / sim.replicationCount().toDouble())
-                sim.timeInSystemTotal.mean()   .let { timeData   .add(sim.currentReplication() to it.toDouble()) }
-                sim.timeInSystemIncoming.mean().let { timeDataIn .add(sim.currentReplication() to it.toDouble()) }
-                sim.timeInSystemLeaving.mean() .let { timeDataOut.add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemTotal.mean().let { timeData.add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemIncoming.mean().let { timeDataIn.add(sim.currentReplication() to it.toDouble()) }
+                sim.timeInSystemLeaving.mean().let { timeDataOut.add(sim.currentReplication() to it.toDouble()) }
             }
         }
 
