@@ -2,7 +2,6 @@ package application.view
 
 import application.controller.MyController
 import application.model.*
-import javafx.geometry.Insets
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable
@@ -29,7 +28,7 @@ class MainView : View("AirCarRental") {
         center = tabpane {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
             tab(ConfigView::class)
-            tab(Graphs::class)
+            tab(GraphsTabView::class)
             tab(MinibusesView::class)
             tab(TerminalView::class)
             tab(CarRentalView::class)

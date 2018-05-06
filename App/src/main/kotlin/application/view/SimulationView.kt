@@ -28,7 +28,7 @@ fun TextField.intValidator() = validator {
     if (!it.isInt()) error("Must be int") else null
 }
 
-fun TextField.intTyper() = textProperty().onChange { if (it?.matches(Regex("\\d*")) ?: false) text else text = null }
+fun TextField.intTyper() = textProperty().onChange { if (it?.matches(Regex("\\d*")) == true) text else text = null }
 
 
 fun String?.isInt(): Boolean {

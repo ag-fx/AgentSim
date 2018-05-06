@@ -1,5 +1,6 @@
 package application.view
 
+import application.controller.MyController
 import application.controller.VariableEmployeesController
 import javafx.geometry.Insets
 import javafx.scene.chart.NumberAxis
@@ -14,17 +15,42 @@ class VariableEmployeesView : View("Závislosť času od počtu zamestnancov") {
 
         left(VariableEmployeesSettingsView::class)
         center = linechart("", NumberAxis(), NumberAxis()) {
-            series("Spolocný čas",controller.dataTotal)
-            series("Prichadazujuci ",controller.dataIn)
-            series("Odchadazujuci",controller.dataOut)
+            series("Spolocný čas", controller.dataTotal)
+            series("Prichadazujuci ", controller.dataIn)
+            series("Odchadazujuci", controller.dataOut)
             createSymbols = true
             with(xAxis as NumberAxis) {
                 isForceZeroInRange = false
-                isAutoRanging= true
+                isAutoRanging = true
             }
             with(yAxis as NumberAxis) {
                 isForceZeroInRange = false
                 isAutoRanging = true
+            }
+        }
+    }
+}
+
+class TimeInSystemGraphView : View("Priemerný čas v simulácii") {
+
+    private val controller: MyController by inject()
+
+    override val root = borderpane {
+        padding = Insets(20.0)
+
+        center = linechart("", NumberAxis(), NumberAxis()) {
+            series("Spolocný čas", controller.timeData)
+            createSymbols = false
+            with(xAxis as NumberAxis) {
+                isForceZeroInRange = false
+                isAutoRanging = true
+                title = "Replikácia"
+            }
+            with(yAxis as NumberAxis) {
+                isForceZeroInRange = false
+                isAutoRanging = true
+                title = "čas v systéme"
+
             }
         }
     }

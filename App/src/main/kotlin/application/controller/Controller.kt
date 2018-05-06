@@ -3,7 +3,9 @@ package application.controller
 import application.model.*
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
+import javafx.collections.FXCollections
 import javafx.collections.FXCollections.observableArrayList
+import javafx.scene.chart.XYChart
 import newsstand.Config
 import newsstand.NewsstandSimulation
 import tornadofx.*
@@ -17,6 +19,8 @@ open class MyController : Controller() {
 
 
     val simulationProgress = SimpleDoubleProperty(.0)
+    val timeData = FXCollections.observableArrayList<XYChart.Data<Number, Number>>()!!
+
     val minibuses = observableArrayList<MinibusModel>()
     val queueT1 = observableArrayList<CustomerModel>()
     val queueT2 = observableArrayList<CustomerModel>()
@@ -50,7 +54,10 @@ open class MyController : Controller() {
 
         sim.onReplicationDidFinish {
             sim.allResults.map(::ResultModel).let(stats::setAll)
-            runLater { simulationProgress.set(sim.currentReplication() / sim.replicationCount().toDouble()) }
+            runLater {
+                simulationProgress.set(sim.currentReplication() / sim.replicationCount().toDouble())
+                sim.timeInSystemTotal.mean().let { timeData.add(sim.currentReplication() to it.toDouble()) }
+            }
         }
 
         sim.start()

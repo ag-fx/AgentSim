@@ -14,39 +14,36 @@ import newsstand.constants.const
 
 class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearable {
 
-    private val boss = BossAgent(this, config)
-    private val surrounding = SurroundingAgent(this, boss)
-    private val terminal = TerminalAgent(this, boss)
-    private val minibus = MinibusAgent(this, boss, config)
-    private val airCarRentalAgent = AirCarRentalAgent(this, boss, config.employees)
+    private val boss              = BossAgent         (this, config)
+    private val surrounding       = SurroundingAgent  (this, boss)
+    private val terminal          = TerminalAgent     (this, boss)
+    private val minibus           = MinibusAgent      (this, boss, config)
+    private val airCarRentalAgent = AirCarRentalAgent (this, boss, config.employees)
 
-    val timeInSystemLeaving = Result("Čas v systéme odchádzajúci",ResultType.Time)
-    val timeInSystemIncoming = Result("Čas v systéme prichádzajúci",ResultType.Time)
-    val timeInSystemTotal = Result("Čas v systéme spoločný",ResultType.Time)
-    val queueT1 = Result("Dĺžka fronty Terminál 1")
-    val timeStatQueueT1 = Result("Čas čakania Terminál 1",ResultType.Time)
-    val queueT2 = Result("Dĺžka fronty Terminál 2")
-    val timeStatQueueT2 = Result("Čas čakania Terminál 2",ResultType.Time)
-    val queueAcr = Result("Dĺžka fronty na obsluhu")
-    val timeStatQueueAcr = Result("Čas čakania na obsluhu",ResultType.Time)
+    val timeInSystemLeaving     = Result("Čas v systéme odchádzajúci",  ResultType.Time)
+    val timeInSystemIncoming    = Result("Čas v systéme prichádzajúci", ResultType.Time)
+    val timeInSystemTotal       = Result("Čas v systéme spoločný",      ResultType.Time)
+    val queueT1                 = Result("Dĺžka fronty Terminál 1")
+    val timeStatQueueT1         = Result("Čas čakania Terminál 1",      ResultType.Time)
+    val queueT2                 = Result("Dĺžka fronty Terminál 2")
+    val timeStatQueueT2         = Result("Čas čakania Terminál 2",      ResultType.Time)
+    val queueAcr                = Result("Dĺžka fronty na obsluhu")
+    val timeStatQueueAcr        = Result("Čas čakania na obsluhu",      ResultType.Time)
 
-    val queueAcrToT3 = Result("Dĺžka fronty na odvoz")
-    val timeStatQueueAcrToT3 = Result("Čas čakania na odvoz",ResultType.Time)
-    val acrQueueLength = Result("")
+    val queueAcrToT3            = Result("Dĺžka fronty na odvoz")
+    val timeStatQueueAcrToT3    = Result("Čas čakania na odvoz",        ResultType.Time)
+    val acrQueueLength          = Result("")
 
-    val employeeOccupancy = Result("Vyťaženosť obsluhujúceho")
+    val employeeOccupancy       = Result("Vyťaženosť obsluhujúceho")
 
-    val busOccupancy    = Result("Vyťaženosť autobusov")
-    val busKiloneters   = Result("Počet najazdených km")
-    val priceKilometers = Result("Cena za najazdene km")
-    val priceBusDriver  = Result("Cena prace soferov")
-    val priceService    = Result("Cena prace obsluhujúci")
+    val busOccupancy            = Result("Vyťaženosť autobusov")
+    val busKiloneters           = Result("Počet najazdených km")
+    val priceKilometers         = Result("Cena za najazdene km")
+    val priceBusDriver          = Result("Cena prace soferov")
+    val priceService            = Result("Cena prace obsluhujúci")
+    val priceAll                = Result("Cena spolu")
 
-    //TODO Trvanie jednej prevádzky
-    //TODO Náklady obsluhujúci
-    //TODO Náklady celkové
-
-    internal var maxSimTime: Double = 0.0
+    private var maxSimTime: Double = 0.0
 
     var warmedUp = false
 
@@ -74,9 +71,13 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         repState.employeeOccupancy.let { employeeOccupancy.addSample(it) }
         repState.busOccupancy.let { busOccupancy.addSample(it) }
         minibus.minibuses.map { it.meters / 1000 }.sum().let { busKiloneters.addSample(it) }
-        minibus.minibuses.map { it.meters / 1000 * it.pricePerKm }.sum().let { priceKilometers.addSample(it) }
-        minibus.minibuses.map { (it.meters /1000 )/35 * config.driverRate }.sum().let { priceBusDriver.addSample(it) }
-        priceService.addSample((currentTime() - const.WarmUpTime) / 60 / 60 * config.serviceRata * config.employees)
+        var price = .0
+        minibus.minibuses.map { it.meters / 1000 * it.pricePerKm }.sum().let { priceKilometers.addSample(it); price+= it }
+        minibus.minibuses.map { (it.meters /1000 )/35 * config.driverRate }.sum().let { priceBusDriver.addSample(it) ; price+= it }
+        val servicePrice = (currentTime() - const.WarmUpTime) / 60 / 60 * config.serviceRata * config.employees
+        priceService.addSample (servicePrice )
+        price += servicePrice
+        priceAll.addSample(price)
         airCarRentalAgent.queue.lengthStatistic().mean().let(acrQueueLength::addSample)
         clear()
     }
@@ -135,7 +136,8 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         busKiloneters,
         priceKilometers,
         priceBusDriver,
-        priceService
+        priceService,
+        priceAll
     )
 
     private fun spacer(name: String = "") = Result(name, ResultType.Spacer)

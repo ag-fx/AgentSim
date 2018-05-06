@@ -2,7 +2,6 @@ package application.controller
 
 import javafx.collections.FXCollections.observableArrayList
 import javafx.collections.ObservableList
-import javafx.concurrent.Task
 import javafx.scene.chart.XYChart
 import newsstand.Config
 import newsstand.NewsstandSimulation
@@ -54,8 +53,6 @@ class VariableEmployeesController : MyController() {
                 }
             }
         }
-
-
 }
 
 fun <A, B> ObservableList<XYChart.Data<Number, Number>>.add(p: Pair<A, B>) = with(p) { add(XYChart.Data(first as Number, second as Number)) }
