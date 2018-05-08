@@ -44,6 +44,11 @@ class AirCarRentalAgent(
         )
     }
 
+    fun isServiceInProgress() =
+            queue.isNotEmpty() ||
+            queueToTerminal3.isNotEmpty() ||
+            employees.any(Employee::isBusy)
+
     fun clearAfterWarmup(){
         totalCustomers = 0
         queue.lengthStatistic().clear()

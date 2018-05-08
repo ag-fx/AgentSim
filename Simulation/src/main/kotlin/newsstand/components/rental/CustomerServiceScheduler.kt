@@ -40,27 +40,33 @@ class CustomerServiceScheduler(
     }
 
     //region generators for service
-    private fun MessageForm.serviceTime() = if (this.convert().group!!.leader.building == Building.AirCarRental) rndOut() else rndIn()
-
-    private fun rndOut() =
-        if (rndProbabilityOut.sample() < 1-(633.0/832))
-            rndOutSmaller.sample()
+    private fun MessageForm.serviceTime() =
+        if (this.convert().group!!.leader.building == Building.AirCarRental)
+            rndOut()
         else
-            rndOutBigger.sample()
+            rndIn()
+
 
     private fun rndIn() =
-        if (rndProbabilityIn.sample() < 1-(847/978))
+        if (rndProbabilityIn.sample() in 0.0..(637.0 / 832))
             rndInSmaller.sample()
         else
             rndInBigger.sample()
 
-    private val rndProbabilityIn = UniformContinuousRNG(0.0, 1.0)
-    private val rndInSmaller = TriangularRNG(1.47 * 60, 2.06 * 60, 3.0 * 60)
-    private val rndInBigger = TriangularRNG(3.0 * 60, 4.63 * 60, 5.31 * 60)
+    private fun rndOut() =
+        if (rndProbabilityOut.sample() in 0.0..(131.0 / 978))
+            rndOutBigger.sample()
+        else
+            rndOutSmaller.sample()
+
+
+    private val rndProbabilityIn  = UniformContinuousRNG(0.0, 1.0)
+    private val rndInSmaller      = TriangularRNG(1.6 * 60, 2.06 * 60, 3.0 * 60)
+    private val rndInBigger       = TriangularRNG(3.0 * 60, 4.63 * 60, 5.31 * 60)
 
     private val rndProbabilityOut = UniformContinuousRNG(0.0, 1.0)
-    private val rndOutSmaller = TriangularRNG(0.99 * 60, 1.15 * 60, 2.21 * 60)
-    private val rndOutBigger = TriangularRNG(2.9 * 60, 4.3 * 60, 4.8 * 60)
+    private val rndOutSmaller     = TriangularRNG(0.99 * 60, 1.15 * 60, 2.21 * 60)
+    private val rndOutBigger      = TriangularRNG(2.9 * 60 , 4.3 * 60, 4.8 * 60)
     //endregion
 
     override fun myAgent() = super.myAgent() as AirCarRentalAgent

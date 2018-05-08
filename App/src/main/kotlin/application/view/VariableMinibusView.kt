@@ -19,11 +19,11 @@ class VariableMinibusView : View("Závislosť času od počtu minibusov") {
             series("Odchadazujuci",controller.dataOut)
             createSymbols = true
             with(xAxis as NumberAxis) {
-                isForceZeroInRange = false
+//                isForceZeroInRange = false
                 isAutoRanging= true
             }
             with(yAxis as NumberAxis) {
-                isForceZeroInRange = false
+//                isForceZeroInRange = false
                 isAutoRanging = true
             }
         }

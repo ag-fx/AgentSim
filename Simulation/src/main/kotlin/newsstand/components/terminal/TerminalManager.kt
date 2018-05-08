@@ -8,12 +8,17 @@ import OSPStat.WStat
 import abaextensions.toAgent
 import abaextensions.toAgentsAssistant
 import abaextensions.withCode
+import newsstand.NewsstandSimulation
 import newsstand.components.convert
 import newsstand.components.entity.Building
+import newsstand.components.entity.Employee
 import newsstand.components.entity.Group
 import newsstand.components.entity.Terminal
+import newsstand.components.rental.AirCarRentalAgent
 import newsstand.constants.id
 import newsstand.constants.mc
+import newsstand.isCoolingDown
+import newsstand.isWarmedUp
 import java.util.*
 
 class TerminalManager(
@@ -47,8 +52,22 @@ class TerminalManager(
             if (msg.convert().group != null) {
                 sendGroupHome(msg)
                 requestPeopleFromMinibus(msg)
-            } else
+            } else{
+                if(isCoolingDown()) {
+                    mySim().stopReplication()
+                }
+//                    val acrAgent = mySim().findAgent(id.AirCarRentalAgentID) as AirCarRentalAgent
+//                    val isServing = acrAgent.employees.any(Employee::isNotBusy)
+//                    val queue = acrAgent.queue.isEmpty()
+//                    val queue2 = acrAgent.queueToTerminal3.isEmpty()
+//                    if (isServing && queue && queue2)
+//                        mySim().stopReplication()
+//                    else
+//                        msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
+//
+//                }
                 msg.createCopy().toAgent(id.MinibusAgentID).withCode(mc.minibusGoTo).let { notice(it) }
+            }
 
         mc.clearLengthStat -> listOf(myAgent().terminalOne, myAgent().terminalTwo).forEach(Terminal::clearAfterWarmUp)
 

@@ -33,8 +33,6 @@ class MinibusMovement(
                 }
                 if(it.minibus!!.queue.size > it.minibus!!.capacity) throw IllegalStateException("too many people in bus")
                 hold(it.minibus!!.secondsToDestination(), it)
-                log("Minibus left ${it.minibus!!.source} @ ${mySim().currentTime()}")
-
             }
 
         mc.minibusArrivedToDestination -> {
@@ -45,8 +43,6 @@ class MinibusMovement(
                 source = destination
                 destination = destination.nextStop(this)
             }
-            log("Minibus arrived ${msg.minibus!!.source} @ ${mySim().currentTime()}")
-
             assistantFinished(msg)
         }
 

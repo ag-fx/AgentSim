@@ -16,6 +16,7 @@ import newsstand.components.entity.isOneFree
 import newsstand.constants.const
 import newsstand.constants.id
 import newsstand.constants.mc
+import newsstand.isCoolingDown
 import java.util.*
 
 // TODO add statistics for waiting times to every queue
@@ -38,6 +39,7 @@ class AirCarRentalManager(
 
         mc.getCustomerFromBusResponse -> {
             if (msg.convert().group == null)
+
                 if (myAgent().queueToTerminal3.isEmpty())
                     if (shouldSimulationContinue(msg))
                         goToNextStop(msg)
