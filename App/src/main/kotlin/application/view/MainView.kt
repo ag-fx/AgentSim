@@ -22,6 +22,7 @@ class MainView : View("AirCarRental") {
                 button("Slow speed") { action { controller.setSimSpeed() } }
                 button("PAUSE") { action { controller.pause() } }
                 button("RESUME") { action { controller.resume() } }
+                button("Stop") { action { controller.stop() } }
                 textfield(controller.simTime, converter = NumberTimeConv())
             }
         }

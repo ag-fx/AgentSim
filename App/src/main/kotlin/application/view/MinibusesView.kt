@@ -32,14 +32,17 @@ class MinibusesView : View("Minibusy") {
                     converter(DoubleTimeConv())
                 }
                 column("vzdialenost do ciela", MinibusModel::distanceToDestination) {
-                    converter(DoubleConv { it.format() })
+                    converter(DoubleConv { it.format() + " m" })
                 }
                 column("Je v zastavke", MinibusModel::isInDestination).apply { isSortable = false }.remainingWidth()
                 onSelectionChange {
                     selected.set(it?.queue?.toList()?.map { CustomerModel(it) }?.observable()
                         ?: emptyList<CustomerModel>().observable())
                 }
-                column("Vytazenost", MinibusModel::occupancy).apply { isSortable = false }
+                column("Vytazenost", MinibusModel::occupancy) {
+                    isSortable = false
+                    converter(DoubleConv{it.format() + " %"})
+                }
                 column("Kilometers", MinibusModel::kilometers) {
                     isSortable = false
                 converter(DoubleConv{(it/1000).format() + " km"})

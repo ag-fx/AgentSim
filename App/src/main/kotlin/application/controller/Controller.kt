@@ -79,5 +79,7 @@ open class MyController : Controller() {
     fun pause() = sim.pauseSimulation()
 
     fun resume() = sim.resumeSimulation()
+
+    fun stop() = sim.stopSimulation()
 }
 

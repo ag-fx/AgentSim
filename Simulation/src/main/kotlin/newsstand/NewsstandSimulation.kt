@@ -60,7 +60,10 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
     override fun replicationFinished() {
         super.replicationFinished()
         val repState = getState()
-        simTime.addSample( (currentTime()-const.WarmUpTime)/60/60)
+        println( "${currentReplication()} ${currentTime()/60/60}")
+
+        if(currentTime()!=maxSimTime)
+            simTime.addSample( currentTime()/60/60)
         repState.timeInSystemIncoming.mean().let(timeInSystemIncoming::addSample)
         repState.timeInSystemLeaving.mean().let(timeInSystemLeaving::addSample)
         repState.timeInSystemTotal.mean().let(timeInSystemTotal::addSample)
@@ -94,8 +97,8 @@ class NewsstandSimulation(val config: Config = Config()) : Simulation(), Clearab
         .forEach(Clearable::clear)
 
     fun start(simEndTime: Double = 4.5 * 3600) {
-        maxSimTime = simEndTime + const.WarmUpTime
-        simulate(config.replicationCount, maxSimTime * 1.5)
+        maxSimTime = simEndTime + const.WarmUpTime *2
+        simulate(config.replicationCount, maxSimTime )//1.2)
     }
 
     fun getState() = SimState(

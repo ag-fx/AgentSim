@@ -67,6 +67,23 @@ class VariableEmployeesSettingsView : View("Config") {
             }
         }
 
+        hbox{
+            button("Stop"){
+                action{
+                    controller.stop()
+                }
+            }
+            button("Pause"){
+                action{
+                    controller.pause()
+                }
+            }
+            button("Resume"){
+                action{
+                    controller.resume()
+                }
+            }
+        }
 
     }
 }

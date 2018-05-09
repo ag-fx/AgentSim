@@ -50,13 +50,13 @@ class TimeInSystemGraphView : View("Priemerný čas v simulácii") {
 
             createSymbols = false
             with(xAxis as NumberAxis) {
-              //  isForceZeroInRange = false
+//                isForceZeroInRange = false
                 isAutoRanging = true
                 title = "Replikácia"
                 isLegendVisible = true
             }
             with(yAxis as NumberAxis) {
-               // isForceZeroInRange = false
+//                isForceZeroInRange = false
                 isAutoRanging = true
                 title = "čas v systéme"
                 isLegendVisible = true

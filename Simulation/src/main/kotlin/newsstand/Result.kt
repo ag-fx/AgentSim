@@ -44,8 +44,8 @@ data class Result(val name: String, private val resultType: ResultType = Other, 
     }
 
     fun toExcel() = when (resultType) {
-        Other -> println(name + "\t" + stat.mean() + "\t" + stat.confidenceInterval_90()[0] + "\t" + stat.confidenceInterval_90()[1])
-        Time -> println(name + "\t" + stat.mean()/60 + "\t" + stat.confidenceInterval_90()[0]/60 + "\t" + stat.confidenceInterval_90()[1]/60)
+        Other  -> println(name + "\t" + stat.mean() + "\t" + stat.confidenceInterval_90()[0] + "\t" + stat.confidenceInterval_90()[1])
+        Time   -> println(name + "\t" + stat.mean()/60 + "\t" + stat.confidenceInterval_90()[0]/60 + "\t" + stat.confidenceInterval_90()[1]/60)
         Spacer -> print("")
     }
 

@@ -2,6 +2,7 @@ package application.view
 
 import application.controller.VariableMinibusController
 import application.model.ConfigModel
+import javafx.geometry.Insets
 import newsstand.Config
 import newsstand.components.entity.BusType
 import tornadofx.*
@@ -68,6 +69,31 @@ class VariableMinibusSettingsView : View("Config") {
             }
         }
 
+        hbox{
+            val insets = Insets(10.0)
+            val pl = 6.0
+            padding = insets
+            button("Stop"){
+                padding = insets
+
+                action{
+                    controller.stop()
+                }
+            }
+            button("Pause"){
+                paddingLeft = pl
+
+                action{
+                    controller.pause()
+                }
+            }
+            button("Resume"){
+                paddingLeft = pl
+                action{
+                    controller.resume()
+                }
+            }
+        }
 
     }
 }

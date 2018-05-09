@@ -39,7 +39,6 @@ class AirCarRentalManager(
 
         mc.getCustomerFromBusResponse -> {
             if (msg.convert().group == null)
-
                 if (myAgent().queueToTerminal3.isEmpty())
                     if (shouldSimulationContinue(msg))
                         goToNextStop(msg)
