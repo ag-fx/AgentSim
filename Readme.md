@@ -8,4 +8,5 @@ JavaFX css by [agix-material-fx](https://bitbucket.org/agix-material-fx/material
 
 [TornadoFX](https://github.com/edvin/tornadofx)
 
- 
+ ### License
+This project is licensed under [GLWTPL](./LICENSE)
